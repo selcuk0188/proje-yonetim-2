@@ -23,32 +23,38 @@
 
 
     $('.validate-form').on('submit', function() {
+
         var check = true;
         var response;
-        var kullaniciAdi = $(input[0]).val(); // kullanici adi
-        var sifre = $(input[1]).val(); // sifre
 
-        const endPoint = "http://localhost:8081/projeyonetim/kullanici";
-        const params = {
-            kullaniciAdi: kullaniciAdi,
-            sifre: sifre
-        };
-        axios({
-            method: "post",
-            url: endPoint,
-            data: {
-                kullaniciAdi: kullaniciAdi,
-                sifre: sifre
-            }
-        })
-            .then(data => alert(data.data.kullaniciList[0].sifre))
-            .catch(err => console.log(err))
-        /*for (var i = 0; i < input.length; i++) {
+        for (var i = 0; i < input.length; i++) {
             if (validate(input[i]) == false) {
                 showValidate(input[i]);
                 check = false;
-            }
-        }*/
+             }
+        }
+        if(check==true) {
+            var kullaniciAdi = $(input[0]).val(); // kullanici adi
+            var sifre = $(input[1]).val(); // sifre
+
+
+            const endPoint = "http://localhost:8081/projeyonetim/kullanici";
+
+            window.location.href = 'proje_tablo/user_page.html?kullaniciAdi='+kullaniciAdi;
+            /*axios({
+                method: "post",
+                url: endPoint,
+                data: {
+                    kullaniciAdi: kullaniciAdi,
+                    sifre: sifre
+                }
+            })
+                .then(data => alert(data.data.kullanici.sifre))
+                .catch(err => console.log(err))
+*/
+
+        }
+
         return check;
     });
 
