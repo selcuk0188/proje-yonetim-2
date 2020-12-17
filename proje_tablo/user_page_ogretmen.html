@@ -467,6 +467,28 @@
 	</div>
 	<!-- END INBOX -->
 </div>
+		<div class="container">
+			<div id="projeAtamaList">
+				<table>
+					<thead class="thead-dark">
+					<tr>
+						<th>TCKN</th>
+						<th>Adı Soyadı</th>
+						<th>Proje Konusu</th>
+						<th>Kaydet/th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for="proje in projeAtamaList" :key="proje.projeId">
+						<td>{{proje.tckn}}</td>
+						<td>{{proje.adSoyad}}</td>
+						<td><input v-model="projeKonusu" placeholder=""></td>
+						<td><button v-on:click="saveProjeKonusu('{{proje.projeId}}', '{{projeKonusu}}')">Kaydet</button></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -517,6 +539,27 @@
 								.post('http://localhost:8081/projeyonetim/projeOnayGuncelle', {
 									projeId: projeId,
 									durum: selected
+								})
+								.then(response => {
+									this.response = response.data.data;
+								})
+								.catch(function (error) {
+									console.log(error);
+								})
+					}
+				}
+			}, {
+				el: '#saveProjeKonusu',
+				data: {
+					projeId,
+					projeKonusu
+				},
+				methods: {
+					save: function (projeId, projeKonusu) {
+						axios
+								.post('http://localhost:8081/projeyonetim/projeAta', {
+									projeId: projeId,
+									projeKonusu: projeKonusu
 								})
 								.then(response => {
 									this.response = response.data.data;
