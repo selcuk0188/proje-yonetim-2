@@ -1,34 +1,15 @@
 
 
 (function($) {
-    "use strict";
-
-
-    /*==================================================================
-    [ Focus input ]*/
-    $('.input100').each(function() {
-        $(this).on('blur', function() {
-            if ($(this).val().trim() != "") {
-                $(this).addClass('has-val');
-            } else {
-                $(this).removeClass('has-val');
-            }
-        })
-    })
-
-
-    /*==================================================================
-    [ Validate ]*/
+    
     var input = $('.validate-input .input100');
-
-
     $('.validate-form').on('submit', function() {
 
         var check = true;
         var response;
 
         for (var i = 0; i < input.length; i++) {
-            if (validate(input[i]) == false) {
+            if (validate(input[i]) == false) { // inputları kontrol et
                 showValidate(input[i]);
                 check = false;
              }
@@ -36,12 +17,8 @@
         if(check==true) {
             var kullaniciAdi = $(input[0]).val(); // kullanici adi
             var sifre = $(input[1]).val(); // sifre
-
-
-            const endPoint = "http://localhost:8081/projeyonetim/kullanici";
-
-            window.location.href = 'proje_tablo/user_page.html?kullaniciAdi='+kullaniciAdi;
-            /*axios({
+            const endPoint = "http://localhost:8081/projeyonetim/kullanici";      
+            axios({ // kullanici bilgileri getir
                 method: "post",
                 url: endPoint,
                 data: {
@@ -49,9 +26,8 @@
                     sifre: sifre
                 }
             })
-                .then(data => alert(data.data.kullanici.sifre))
+                .then(data => kullaniciYonlendir(data.data.kullanici)) // role gore sayfalara yonlendir
                 .catch(err => console.log(err))
-*/
 
         }
 
@@ -88,9 +64,21 @@
 
         $(thisAlert).removeClass('alert-validate');
     }
-
-    /*==================================================================
-    [ Show pass ]*/
+    
+    function kullaniciYonlendir(input) {
+        var rol = $(input).rol;
+        if(rol == 1){
+            window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciAdi='+kullaniciAdi;
+        }
+        if(rol == 2){
+            window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciAdi='+kullaniciAdi;
+        }
+        if(rol == 3){
+            window.location.href = 'proje_tablo/user_page_admin.html?kullaniciAdi='+kullaniciAdi;
+        }
+    }
+    
+    
     var showPass = 0;
     $('.btn-show-pass').on('click', function() {
         if (showPass == 0) {
