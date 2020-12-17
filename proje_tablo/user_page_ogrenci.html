@@ -279,59 +279,32 @@
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
 <body>
-
-<div class="container">
-	<div class="row" style="display: flex; justify-content: flex-end">
-		<div class="span4 well">
-			<div class="row">
-				<div class="span1"><a class="thumbnail"><img src="https://i.stack.imgur.com/YQu5k.png" alt="Avatar" class="avatar"> </a></div>
-				<div class="span3">
-					<p>Admin</p>
-					<p><strong>Selcuk H.</strong></p>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 	<div class="container">
-		<div class="row">
-		<div class="wrap-table100">
-			<div class="table100">
-				<table>
-					<thead>
-					<tr class="table100-head">
-						<th class="column1">Ders Adı</th>
-						<th class="column0">Proje Adı</th>
-						<th class="column0">Durum</th>
-						<th class="column0">Son İşlem Tarihi</th>
-						<th class="column0">Son İşlem</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td class="column1">TBML-403-13 Proje I (Uygulama Dersi)</td>
-						<td class="column0">Proje Yönetim ve Takip Sistemi</td>
-						<td class="column0">Danışmanınız Onayladı.</td>
-						<td class="column0">12-18-2020 01:22</td>
-						<td class="column0">Herhangi bir hareket yoktur</td>
-					</tr>
-					<tr>
-						<td class="column1">TBML-404-14 Proje II (Uygulama Dersi)</td>
-						<td class="column0">Proje Yönetim ve Takip Sistemi 2</td>
-						<td class="column0">Danışmanınız Onayladı.</td>
-						<td class="column0">06-17-2021 01:22</td>
-						<td class="column0">Herhangi bir hareket yoktur</td>
-					</tr>
-					</tbody>
-				</table>
+		<div id="projeListesi">
+			<table>
+				<thead class="thead-dark">
+				<tr>
+					<th>Ders Adı</th>
+					<th>Proje Adı</th>
+					<th>Durum</th>
+					<th>Son İşlem Tarihi</th>
+					<th>Son İşlem</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr v-for="proje in projeList" :key="proje.projeId">
+					<td>{{proje.dersAdi}}</td>
+					<td>{{proje.projeAdi}}</td>
+					<td>{{proje.durum}}</td>
+					<td>{{proje.sonIslemTarihi}}</td>
+					<td>{{proje.sonIslem}}</td>
+				</tr>
+				</tbody>
+			</table>
 		</div>
-	</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<h2 class="grid-title"><i class="fa fa-inbox"></i>MESAJ YAZ</h2>
-			</div>
-		</div>
+
+
+
 <div class="row">
 	<!-- BEGIN INBOX -->
 	<div class="col-md-12">
@@ -348,7 +321,7 @@
 						<div>
 							<ul class="nav nav-pills nav-stacked">
 								<li class="header">Klasörler</li>
-								<li class="active"><a href="#"><i class="fa fa-inbox"></i> Gelen mesaj (3)</a></li>
+								<li class="active"><a href="#"><i class="fa fa-inbox"></i> Gelen mesaj</a></li>
 								<li><a href="#"><i class="fa fa-star"></i> Yıldızlı</a></li>
 								<li><a href="#"><i class="fa fa-bookmark"></i> Önemli</a></li>
 								<li><a href="#"><i class="fa fa-mail-forward"></i> Gönderilen</a></li>
@@ -395,34 +368,26 @@
 						<div class="padding"></div>
 						
 						<div class="table-responsive">
-							<table class="table">
-								<tbody><tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="#">Dr. Öğr. Üyesi Sami ACAR (TBML-403-13 - Proje I)</a></td>
-									<td class="subject"><a href="#">Proje-I dersi ve uygulama projesi önerisi hakkında... </a></td>
-									<td class="time">08:30 PM</td>
-								</tr>
-								<tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="#">berat</a></td>
-									<td class="subject"><a href="#">analiz</a></td>
-									<td class="time">08:30 PM</td>
-								</tr>
-								<tr>
-									<td class="action"><input type="checkbox" /></td>
-									<td class="action"><i class="fa fa-star-o"></i></td>
-									<td class="action"><i class="fa fa-bookmark-o"></i></td>
-									<td class="name"><a href="#">umut topak</a></td>
-									<td class="subject"><a href="#"> uygulama projesi önerisi  </a></td>
-									<td class="time">08:30 PM</td>
-								</tr>
-								
-								
-							</tbody></table>
+							<div id="mesajListesi">
+								<table>
+									<thead class="thead-dark">
+									<tr>
+										<th>Mesaj Başlığı</th>
+										<th>Mesaj Konusu</th>
+										<th>Gönderici</th>
+										<th>Gönderilme Tarihi</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr v-for="mesaj in mesajListesi" :key="mesaj.id">
+										<td>{{proje.mesajbasligi}}</td>
+										<td>{{proje.mesajkonusu}}</td>
+										<td>{{proje.gonderenkullaniciAdi}}</td>
+										<td>{{proje.tarih}}</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 
 						<ul class="pagination">
@@ -478,6 +443,48 @@
 	<!-- END INBOX -->
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+	new Vue({
+		el: "#projeListesi",
+		data() {
+			return {
+				projeList: []
+			}
+		},
+		mounted: function() {
+			axios
+					.post('http://localhost:8081/projeyonetim/projeBykullaniciId?kullaniciId='+kullaniciId)
+					.then(response => {
+						this.projeList = response.data.data.projeList
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+		}
+	}, {
+		el: "#mesajListesi",
+			data() {
+		return {
+			mesajList: []
+		}
+	},
+	mounted: function() {
+		axios
+				.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId)
+				.then(response => {
+					this.mesajList = response.data.data.mesajList
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+		}
+	},
+
+	)
+
+</script>
 
 </body>
 </html>
