@@ -1,6 +1,4 @@
-
-
-(function($) {
+(function($) { // LOGIN BUTTON CLICK
     
     var input = $('.validate-input .input100');
     $('.validate-form').on('submit', function() {
@@ -40,7 +38,20 @@
             hideValidate(this);
         });
     });
-
+    
+    // SAYFAYI YONLENDIR
+    function kullaniciYonlendir(input) {
+        var rolId = $(input).rolId;
+        if(rolId == 1){
+            window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciAdi='+kullaniciAdi;
+        }
+        if(rolId == 2){
+            window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciAdi='+kullaniciAdi;
+        }
+    }
+    
+    
+    // INPUTU KONTROL ET
     function validate(input) {
         if ($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
             if ($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
@@ -64,20 +75,6 @@
 
         $(thisAlert).removeClass('alert-validate');
     }
-    
-    function kullaniciYonlendir(input) {
-        var rol = $(input).rol;
-        if(rol == 1){
-            window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciAdi='+kullaniciAdi;
-        }
-        if(rol == 2){
-            window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciAdi='+kullaniciAdi;
-        }
-        if(rol == 3){
-            window.location.href = 'proje_tablo/user_page_admin.html?kullaniciAdi='+kullaniciAdi;
-        }
-    }
-    
     
     var showPass = 0;
     $('.btn-show-pass').on('click', function() {
