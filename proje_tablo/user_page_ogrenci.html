@@ -279,7 +279,8 @@
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
 <body>
-	<div class="container">
+<div class="row">
+<div class="container">
 		<div id="projeListesi">
 			<table>
 				<thead class="thead-dark">
@@ -292,19 +293,20 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="proje in projeList" :key="proje.projeId">
-					<td>{{proje.dersAdi}}</td>
+				<tr v-for="proje in projeList" :key="proje.id">
 					<td>{{proje.projeAdi}}</td>
-					<td>{{proje.durum}}</td>
-					<td>{{proje.sonIslemTarihi}}</td>
-					<td>{{proje.sonIslem}}</td>
+					<td>{{proje.projeAdi}}</td>
+					<td>{{proje.projeAdi}}</td>
+					<td>{{proje.projeAdi}}</td>
+					<td>{{proje.projeAdi}}</td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
-
-
-
+	</div>
+</div>
+<div class="row">
+<div class="container">
 <div class="row">
 	<!-- BEGIN INBOX -->
 	<div class="col-md-12">
@@ -443,6 +445,7 @@
 	<!-- END INBOX -->
 </div>
 </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
@@ -455,9 +458,9 @@
 		},
 		mounted: function() {
 			axios
-					.post('http://localhost:8081/projeyonetim/projeBykullaniciId?kullaniciId='+kullaniciId)
+					.post('http://localhost:8081/projeyonetim/projeBykullaniciId?kullaniciId='+1)
 					.then(response => {
-						this.projeList = response.data.data.projeList
+						this.projeList = response.data.projeList
 					})
 					.catch(function (error) {
 						console.log(error);

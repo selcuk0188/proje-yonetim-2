@@ -24,14 +24,14 @@
 	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
 
 	<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
-
+	<link rel="stylesheet" type="text/css" href="css/menu_style.css">
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 
 	<meta charset='utf-8'>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="styles.css">
+
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<script src="script.js"></script>
 
@@ -40,6 +40,32 @@
     margin-top:20px;
     background:#eee;
 }
+
+		.button-vue {
+			background-color: #4CAF50; /* Green */
+			border: none;
+			color: white;
+			padding: 16px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			transition-duration: 0.4s;
+			cursor: pointer;
+		}
+
+		.button1vue {
+			background-color: white;
+			color: black;
+			border: 2px solid #4CAF50;
+		}
+
+		.button1vue:hover {
+			background-color: #4CAF50;
+			color: white;
+		}
+
 /* EMAIL */
 .email {
     padding: 20px 10px 15px 10px;
@@ -257,6 +283,29 @@
     border-bottom-width: 4px !important;
     border-bottom-style: solid !important;
 }
+.btn-vue-txt {
+	background-color: lightgrey;
+	border-style: solid;
+	border-color: red;
+	border: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 0px;
+	margin-left: 0px;
+	padding-top: 10px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+}
+.btn-vue {
+	margin-right: 10px;
+	margin-left: 10px;
+			padding-top: 10px;
+			padding-right: 10px;
+			padding-bottom: 10px;
+			padding-left: 10px;
+}
+
     </style>
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<script src="vendor/bootstrap/js/popper.js"></script>
@@ -286,14 +335,14 @@
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
 <body>
-<div id='menu'>
+<div id='cssmenu'>
 	<ul>
-		<li class='active'><a href='#'>Anasayfa</a></li>
-		<li><a href='#'>Öğrenciye Proje Atama</a></li>
+		<li id="n1" onclick="openCloseKl()"><a href='#'>Anasayfa</a></li>
+		<li id="n2" onclick="openClosePl()"><a href='#'>Öğrenciye Proje Atama</a></li>
 	</ul>
 </div>
 
-	<div class="container">
+	<div id = "pl" class="container">
 		<div id="projeListesi">
 			<table>
 				<thead class="thead-dark">
@@ -301,10 +350,10 @@
 					<th>TCKN</th>
 					<th>Adı Soyadı</th>
 					<th>Proje Konusu</th>
-					<th>Durum/th>
-					<th>Son İşlem Tarihi/th>
-					<th>Aşama Seçim/th>
-					<th>Onaylama/th>
+					<th>Durum</th>
+					<th>Son İşlem Tarihi</th>
+					<th>Aşama Seçim</th>
+					<th>Onaylama</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -316,13 +365,13 @@
 					<td>{{proje.sonIslemTarihi}}</td>
 					<td><select v-model="selected">
 							<option disabled value="">Seçiniz</option>
-							<option>Analiz</option>
-							<option>Tasarım</option>
-							<option>Gerçekleme</option>
+							<option value="1">Analiz</option>
+							<option value="2">Tasarım</option>
+							<option value="3">Gerçekleme</option>
 						</select>
 
 					</td>
-					<td><button v-on:click="save('{{proje.projeId}}', '{{ selected }}')">Kaydet</button></td>
+					<td><button v-on:click="save('{{proje.projeId}}', '{{ selected }}')">Onayla</button></td>
 				</tr>
 				</tbody>
 			</table>
@@ -467,110 +516,107 @@
 	</div>
 	<!-- END INBOX -->
 </div>
-		<div class="container">
-			<div id="projeAtamaList">
+</div >
+		<div id = "kl" class="container">
+			<div id="kullaniciListele">
 				<table>
 					<thead class="thead-dark">
 					<tr>
 						<th>TCKN</th>
 						<th>Adı Soyadı</th>
 						<th>Proje Konusu</th>
-						<th>Kaydet/th>
+						<th>Kaydet</th>
 					</tr>
 					</thead>
 					<tbody>
-					<tr v-for="proje in projeAtamaList" :key="proje.projeId">
-						<td>{{proje.tckn}}</td>
-						<td>{{proje.adSoyad}}</td>
-						<td><input v-model="projeKonusu" placeholder=""></td>
-						<td><button v-on:click="saveProjeKonusu('{{proje.projeId}}', '{{projeKonusu}}')">Kaydet</button></td>
+					<tr v-for="kullanici in kullaniciList" :key="kullanici.id">
+						<td>{{kullanici.tcNo}}</td>
+						<td>{{kullanici.adSoyad}}</td>
+						<td class = "btn-vue"><input id="deneme" class = "btn-vue-txt" v-model="projeKonusu" placeholder="" ></td>
+						<td><div id = "saveProjeKonusu"><button class="button-vue button1vue" v-on:click="saveProjeKonusu( kullanici.id )">Kaydet</button></div></td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+
+	//var cssmenu = document.getElementById("cssmenu");
+	//var btns = cssmenu.getElementsByClassName("li");
+	openClose("kl");
+	let navbar = document
+			.getElementById("cssmenu")
+			.querySelectorAll('li');
+	for (var i = 0; i < navbar.length; i++) {
+		navbar[i].addEventListener("click", function() {
+			var current = document.getElementsByClassName("active");
+			if (current.length > 0) {
+				current[0].className = current[0].className.replace(" active", "");
+			}
+			this.className += " active";
+		});
+	}
+	function openCloseKl(){
+		openClose("kl");
+	}
+	function openClosePl(){
+		openClose("pl");
+	}
+	function openClose(param) {
+		var pl = document.getElementById("pl");
+		var kl = document.getElementById("kl");
+		if(param=="pl"){
+				pl.style.display = "none";
+				kl.style.display = "block";
+		}
+		else{
+			kl.style.display = "none";
+			pl.style.display = "block";
+		}
+
+	}
+
 	new Vue({
-		el: "#projeListesi",
+		el: "#kullaniciListele",
 		data() {
 			return {
-				projeList: []
+				kullaniciList: []
 			}
 		},
 		mounted: function() {
 			axios
-					.post('http://localhost:8081/projeyonetim/projeListele')
+					.post('http://localhost:8081/projeyonetim/kullaniciListele',{})
 					.then(response => {
-						this.projeList = response.data.data.projeList
+						this.kullaniciList = response.data.kullaniciList
 					})
 					.catch(function (error) {
 						console.log(error);
 					})
 		}
-	}, {
-		el: "#mesajListesi",
-			data() {
-		return {
-			mesajList: []
-		}
-	},
-	mounted: function() {
-		axios
-				.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId)
-				.then(response => {
-					this.mesajList = response.data.data.mesajList
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-		}
-	}, {
-				el: '#save',
-				data: {
-					projeId,
-					durum,
-				},
-				methods: {
-					save: function (projeId, projeOnay, selected) {
-						axios
-								.post('http://localhost:8081/projeyonetim/projeOnayGuncelle', {
-									projeId: projeId,
-									durum: selected
-								})
-								.then(response => {
-									this.response = response.data.data;
-								})
-								.catch(function (error) {
-									console.log(error);
-								})
-					}
-				}
-			}, {
-				el: '#saveProjeKonusu',
-				data: {
-					projeId,
-					projeKonusu
-				},
-				methods: {
-					save: function (projeId, projeKonusu) {
-						axios
-								.post('http://localhost:8081/projeyonetim/projeAta', {
-									projeId: projeId,
-									projeKonusu: projeKonusu
-								})
-								.then(response => {
-									this.response = response.data.data;
-								})
-								.catch(function (error) {
-									console.log(error);
-								})
-					}
-				}
+	})
+
+
+
+	new Vue({
+		el: '#saveProjeKonusu',
+		methods: {
+			saveProjeKonusu: function (kullaniciId) {
+				var projeKonusu = document.getElementById('deneme').value;
+				axios
+						.post('http://localhost:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId)
+						.then(response => {
+							//this.isBasariliMi = response.data.isBasariliMi;
+
+						})
+						.catch(function (error) {
+							console.log(error);
+						})
 			}
-	)
+		}
+	})
 
 </script>
 

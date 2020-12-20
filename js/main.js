@@ -1,5 +1,5 @@
 (function($) { // LOGIN BUTTON CLICK
-    
+
     var input = $('.validate-input .input100');
     $('.validate-form').on('submit', function() {
 
@@ -13,23 +13,20 @@
              }
         }
         if(check==true) {
+            const axios = require('axios').default;
             var kullaniciAdi = $(input[0]).val(); // kullanici adi
             var sifre = $(input[1]).val(); // sifre
-            const endPoint = "http://localhost:8081/projeyonetim/kullanici";      
+            const endPoint = "http://localhost:8081/projeyonetim/kullaniciLogin?kullaniciAdi="+kullaniciAdi+"&sifre="+sifre;
             axios({ // kullanici bilgileri getir
                 method: "post",
-                url: endPoint,
-                data: {
-                    kullaniciAdi: kullaniciAdi,
-                    sifre: sifre
-                }
+                url: endPoint
             })
                 .then(data => kullaniciYonlendir(data.data.kullanici)) // role gore sayfalara yonlendir
                 .catch(err => console.log(err))
 
         }
-
-        return check;
+        alert("return")
+        //return check;
     });
 
 
