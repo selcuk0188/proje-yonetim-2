@@ -68,6 +68,62 @@
 			background-color: #47c9af;
 			color: white;
 		}
+		/*--thank you pop starts here--*/
+		.thank-you-pop{
+			width:100%;
+			padding:20px;
+			text-align:center;
+		}
+		.thank-you-pop img{
+			width:76px;
+			height:auto;
+			margin:0 auto;
+			display:block;
+			margin-bottom:25px;
+		}
+
+		.thank-you-pop h1{
+			font-size: 42px;
+			margin-bottom: 25px;
+			color:#5C5C5C;
+		}
+		.thank-you-pop p{
+			font-size: 20px;
+			margin-bottom: 27px;
+			color:#5C5C5C;
+		}
+		.thank-you-pop h3.cupon-pop{
+			font-size: 25px;
+			margin-bottom: 40px;
+			color:#222;
+			display:inline-block;
+			text-align:center;
+			padding:10px 20px;
+			border:2px dashed #222;
+			clear:both;
+			font-weight:normal;
+		}
+		.thank-you-pop h3.cupon-pop span{
+			color:#03A9F4;
+		}
+		.thank-you-pop a{
+			display: inline-block;
+			margin: 0 auto;
+			padding: 9px 20px;
+			color: #fff;
+			text-transform: uppercase;
+			font-size: 14px;
+			background-color: #8BC34A;
+			border-radius: 17px;
+		}
+		.thank-you-pop a i{
+			margin-right:5px;
+			color:#fff;
+		}
+		#ignismyModal .modal-header{
+			border:0px;
+		}
+		/*--thank you pop ends here--*/
 
 /* EMAIL */
 .email {
@@ -333,6 +389,7 @@
 					<th>Adı Soyadı</th>
 					<th>Proje Konusu</th>
 					<th>Durum</th>
+					<th>Son İşlem</th>
 					<th>Son İşlem Tarihi</th>
 					<th>Aşama Seçim</th>
 					<th>İşlem</th>
@@ -341,9 +398,10 @@
 				<tbody>
 				<tr v-for="proje in projeList" :key="proje.id">
 					<td>{{proje.tckn}}</td>
-					<td>{{proje.adSoyad}}</td>
-					<td>{{proje.projeAdi}}</td>
-					<td>{{proje.durum}}</td>
+					<td>{{proje.adiSoyadi}}</td>
+					<td>{{proje.projeKonusu}}</td>
+					<td>{{getDurum(proje.durum)}}</td>
+					<td>{{proje.sonIslem}}</td>
 					<td>{{proje.sonIslemTarihi}}</td>
 					<td><select v-model="proje.selected">
 							<option disabled value="">Seçiniz</option>
@@ -356,6 +414,20 @@
 				</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="modal" id="proje-onay-modal" role="dialog" style="position: fixed;height: 380px;width:600px;overflow-y: hidden;">
+			<div class="modal-dialog">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" onclick="exit2Modal()" aria-label=""><span>×</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="thank-you-pop">
+						<img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+						<h1>Proje Onay</h1>
+						<p>İşlem Başarıyla Gerçekleşmiştir</p>
+					</div>
+				</div>
+			</div>
 		</div>
 </div>
 
@@ -503,8 +575,7 @@
 								</div>
 							</div>
 						</div>
-
-					<!-- END COMPOSE MESSAGE -->
+				<!-- END COMPOSE MESSAGE -->
 				</div>
 			</div>
 		</div>
@@ -534,7 +605,23 @@
 					</tbody>
 				</table>
 			</div>
+			<div class="modal" id="proje-onay-modal-2" role="dialog" style="position: fixed;height: 380px;width:600px;overflow-y: hidden;">
+				<div class="modal-dialog">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" onclick="exit3Modal()" aria-label=""><span>×</span></button>
+					</div>
+					<div class="modal-body">
+						<div class="thank-you-pop">
+							<img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
+							<h1>Proje Atama</h1>
+							<p>İşlem Başarıyla Gerçekleşmiştir</p>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+
+
 <!--
 <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Small Modal</button>
 
@@ -576,6 +663,20 @@
 			this.className += " active";
 		});
 	}
+	let mesajBox = document
+			.getElementById("mesajBox")
+			.querySelectorAll('li');
+
+	for (var i = 1; i < mesajBox.length; i++) {
+		mesajBox[i].addEventListener("click", function() {
+			var current = document.getElementsByClassName("active");
+			if (current.length > 0) {
+				current[1].className = current[1].className.replace(" active", "");
+			}
+			this.className += " active";
+		});
+	}
+
 	function openPl(){
 		open("pl");
 	}
@@ -608,18 +709,51 @@
 
 	}
 
-	let mesajBox = document
-			.getElementById("mesajBox")
-			.querySelectorAll('li');
+	function openl(mesaj){
+		var element1 = document.getElementById("form-input-kimden");
+		element1.value = mesaj.gonderenkullaniciid;
+		var element2 = document.getElementById("form-input-konu");
+		element2.value = mesaj.mesajkonusu;
+		var element3 = document.getElementById("form-input-icerik");
+		element3.value = mesaj.mesajicerigi;
+		var modal = document.getElementById("mesaj-modal");
+		modal.style.display = "block";
 
-	for (var i = 1; i < mesajBox.length; i++) {
-		mesajBox[i].addEventListener("click", function() {
-			var current = document.getElementsByClassName("active");
-			if (current.length > 0) {
-				current[1].className = current[1].className.replace(" active", "");
-			}
-			this.className += " active";
-		});
+
+	}
+
+	function exitModal(){
+		var modal = document.getElementById("mesaj-modal");
+		modal.style.display = "none";
+	}
+
+	function openOnayModal() {
+		var modal = document.getElementById("proje-onay-modal");
+		modal.style.display = "block";
+	}
+
+	function exit2Modal(){
+		var modal = document.getElementById("proje-onay-modal");
+		modal.style.display = "none";
+	}
+
+	function openOnay2Modal() {
+		var modal = document.getElementById("proje-onay-modal-2");
+		modal.style.display = "block";
+	}
+
+	function exit3Modal(){
+		var modal = document.getElementById("proje-onay-modal-2");
+		modal.style.display = "none";
+	}
+
+	function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+				results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
 
@@ -635,7 +769,7 @@
 		},
 		mounted: function() {
 			axios
-					.post('http://localhost:8081/projeyonetim/kullaniciListele',{})
+					.post('http://localhost:8081/projeyonetim/kullaniciListele?rolId=1')
 					.then(response => {
 						this.kullaniciList = response.data.kullaniciList
 					})
@@ -646,10 +780,9 @@
 		methods: {
 			saveProjeKonusu: function (kullaniciId, projeKonusu) {
 				axios
-						.post('http://localhost:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId)
+						.post('http://localhost:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId+'&dersId='+1)
 						.then(response => {
-							console.log("basarili");
-
+							openOnay2Modal();
 						})
 						.catch(function (error) {
 							console.log(error);
@@ -679,47 +812,22 @@
 			save: function (projeId, durum) {
 				axios
 						.post('http://localhost:8081/projeyonetim/projeOnayGuncelle',{projeId:projeId,durum:durum})
-						.then(response => {
-							console.log("basarili");
+						.then(function (response) {
+							openOnayModal();
 						})
 						.catch(function (error) {
 							console.log(error);
-						})
+						});
+			},
+			getDurum: function (durum) {
+				if(durum==0){return "Analiz bekleniyor";}
+				else if(durum==1){return "Tasarım bekleniyor";}
+				else if(durum==2){return "Gerçekleme bekleniyor";}
+				else if(durum==3){return "Sunum bekleniyor";}
+				else{return "-";}
 			}
 		}
 	})
-
-
-	function openl(mesaj){
-		var element1 = document.getElementById("form-input-kimden");
-		element1.value = mesaj.gonderenkullaniciid;
-		var element2 = document.getElementById("form-input-konu");
-		element2.value = mesaj.mesajkonusu;
-		var element3 = document.getElementById("form-input-icerik");
-		element3.value = mesaj.mesajicerigi;
-		var modal = document.getElementById("mesaj-modal");
-		modal.style.display = "block";
-
-
-	}
-
-
-
-	function exitModal(){
-		var modal = document.getElementById("mesaj-modal");
-		modal.style.display = "none";
-	}
-
-	function getParameterByName(name, url = window.location.href) {
-		name = name.replace(/[\[\]]/g, '\\$&');
-		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-				results = regex.exec(url);
-		if (!results) return null;
-		if (!results[2]) return '';
-		return decodeURIComponent(results[2].replace(/\+/g, ' '));
-	}
-
-
 
 
 	new Vue({

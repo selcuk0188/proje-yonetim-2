@@ -531,7 +531,7 @@
 	},
 	mounted: function() {
 		axios
-				.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId)
+				.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId+'&kim='+1)
 				.then(response => {
 					this.mesajList = response.data.data.mesajList
 				})

@@ -22,10 +22,10 @@
                 method: 'post',
                 url: endPoint
             }).then(function (response) {
-                kullaniciYonlendir(response.data.kullanici);
+                kullaniciYonlendir(response.data);
             });
         }
-        return check;
+        //return check;
     });
 
 
@@ -37,13 +37,17 @@
     
     // SAYFAYI YONLENDIR
     function kullaniciYonlendir(input) {
-        var rolId = input.rol.id;
-        var kullaniciId = input.id;
-        var adSoyad = input.adSoyad;
-        if(rolId == 2){
+        var basariliMi = input.basariliMi;
+        var rolId = input.kullanici.rolId;
+        var kullaniciId = input.kullanici.id;
+        var adSoyad = input.kullanici.adSoyad;
+        if(basariliMi!=true){
+            alert("Kullanıcı adı veya şifre yanlış!");
+        }
+        else if(rolId == 1){
             window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciId='+kullaniciId;
         }
-        if(rolId == 1){
+        else if(rolId == 2){
             window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciId='+kullaniciId;
         }
     }
