@@ -13,20 +13,19 @@
              }
         }
         if(check==true) {
-            const axios = require('axios').default;
+            //const axios = require('axios').default;
             var kullaniciAdi = $(input[0]).val(); // kullanici adi
             var sifre = $(input[1]).val(); // sifre
-            const endPoint = "http://localhost:8081/projeyonetim/kullaniciLogin?kullaniciAdi="+kullaniciAdi+"&sifre="+sifre;
-            axios({ // kullanici bilgileri getir
-                method: "post",
-                url: endPoint
-            })
-                .then(data => kullaniciYonlendir(data.data.kullanici)) // role gore sayfalara yonlendir
-                .catch(err => console.log(err))
 
+            const endPoint = "http://localhost:8081/projeyonetim/kullaniciLogin?kullaniciAdi="+kullaniciAdi+"&sifre="+sifre;
+            axios({
+                method: 'post',
+                url: endPoint
+            }).then(function (response) {
+                kullaniciYonlendir(response.data.kullanici);
+            });
         }
-        alert("return")
-        //return check;
+        return check;
     });
 
 
@@ -38,12 +37,14 @@
     
     // SAYFAYI YONLENDIR
     function kullaniciYonlendir(input) {
-        var rolId = $(input).rolId;
-        if(rolId == 1){
-            window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciAdi='+kullaniciAdi;
-        }
+        var rolId = input.rol.id;
+        var kullaniciId = input.id;
+        var adSoyad = input.adSoyad;
         if(rolId == 2){
-            window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciAdi='+kullaniciAdi;
+            window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciId='+kullaniciId;
+        }
+        if(rolId == 1){
+            window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciId='+kullaniciId;
         }
     }
     

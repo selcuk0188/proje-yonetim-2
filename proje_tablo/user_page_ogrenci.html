@@ -259,28 +259,40 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
 	<script type="text/javascript"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-
-		function gtag() {
-			dataLayer.push(arguments);
-		}
-		gtag('js', new Date());
-
-
-		gtag('config', 'UA-23581568-13');
-	</script>
 
 
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/menu_style.css">
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
 <body>
-<div class="row">
-<div class="container">
+<div id='cssmenu'>
+	<ul>
+		<li id="n1" onclick="openKl()"><a href='#'>Anasayfa</a></li>
+		<li id="n2" onclick="openPl()"><a href='#'>Mesaj</a></li>
+	</ul>
+</div>
+<div>
+
+	<div class="container" style="margin-left:auto; margin-right:0;">
+		<div class="row">
+			<div class="span4 well">
+				<div class="row">
+					<div class="span1"><a href="http://critterapp.pagodabox.com/others/admin" class="thumbnail"><img src="http://critterapp.pagodabox.com/img/user.jpg" alt=""></a></div>
+					<div class="span3">
+						<p>Öğrenci</p>
+						<p><strong>First Last Name</strong></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container" id="kl">
 		<div id="projeListesi">
 			<table>
 				<thead class="thead-dark">
@@ -304,9 +316,8 @@
 			</table>
 		</div>
 	</div>
-</div>
-<div class="row">
-<div class="container">
+
+<div class="container" id="pl">
 <div class="row">
 	<!-- BEGIN INBOX -->
 	<div class="col-md-12">
@@ -405,35 +416,33 @@
 					<!-- END INBOX CONTENT -->
 					
 					<!-- BEGIN COMPOSE MESSAGE -->
-					<div class="modal fade" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true">
-						<div class="modal-wrapper">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header bg-blue">
-										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-										<h4 class="modal-title"><i class="fa fa-envelope"></i> Yeni Mesaj Oluşturun</h4>
-									</div>
-									<form action="#" method="post">
-										<div class="modal-body">
-											<div class="form-group">
-												<input name="to" type="email" class="form-control" placeholder="Kime">
-											</div>
-											
-											<div class="form-group">
-												<input name="subject" type="email" class="form-control" placeholder="Konu">
-											</div>
-											<div class="form-group">
-												<textarea name="message" id="email_message" class="form-control" placeholder="Mesaj" style="height: 120px;"></textarea>
-											</div>
-											<div class="form-group">														<input type="file" name="attachment">
-											</div>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
-											<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope"></i> Mesaj gönder</button>
-										</div>
-									</form>
+					<div class="modal" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;">
+						<div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
+							<div class="modal-content">
+								<div class="modal-header bg-blue">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+									<h4 class="modal-title"><i class="fa fa-envelope"></i> Yeni Mesaj Oluşturun</h4>
 								</div>
+								<form action="#" method="post">
+									<div class="modal-body">
+										<div class="form-group">
+											<input name="to" type="email" class="form-control" placeholder="Kime">
+										</div>
+
+										<div class="form-group">
+											<input name="subject" type="email" class="form-control" placeholder="Konu">
+										</div>
+										<div class="form-group">
+											<textarea name="message" id="email_message" class="form-control" placeholder="Mesaj" style="height: 120px;"></textarea>
+										</div>
+										<div class="form-group">														<input type="file" name="attachment">
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
+										<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope"></i> Mesaj gönder</button>
+									</div>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -444,11 +453,58 @@
 	</div>
 	<!-- END INBOX -->
 </div>
-</div>
+
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+
+	openKl();
+	let navbar = document
+			.getElementById("cssmenu")
+			.querySelectorAll('li');
+	navbar[0].className += " active";
+
+	for (var i = 0; i < navbar.length; i++) {
+		navbar[i].addEventListener("click", function() {
+			var current = document.getElementsByClassName("active");
+			if (current.length > 0) {
+				current[0].className = current[0].className.replace(" active", "");
+			}
+			this.className += " active";
+		});
+	}
+	function openPl(){
+		open("pl");
+	}
+	function openKl(){
+		open("kl");
+	}
+	function open(param) {
+		var pl = document.getElementById("pl");
+		var kl = document.getElementById("kl");
+		if(param=="pl"){
+			pl.style.display = "block";
+			kl.style.display = "none";
+		}
+		else {
+			kl.style.display = "block";
+			pl.style.display = "none";
+		}
+
+	}
+
+	function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+				results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
+
+
 	new Vue({
 		el: "#projeListesi",
 		data() {
@@ -458,7 +514,7 @@
 		},
 		mounted: function() {
 			axios
-					.post('http://localhost:8081/projeyonetim/projeBykullaniciId?kullaniciId='+1)
+					.post('http://localhost:8081/projeyonetim/projeBykullaniciId?kullaniciId='+getParameterByName('kullaniciId'))
 					.then(response => {
 						this.projeList = response.data.projeList
 					})

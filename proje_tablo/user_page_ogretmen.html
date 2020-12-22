@@ -34,6 +34,9 @@
 
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<script src="script.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery-3.5.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 
     <style type="text/css">
     	body{
@@ -45,11 +48,11 @@
 			background-color: #4CAF50; /* Green */
 			border: none;
 			color: white;
-			padding: 16px 32px;
+			padding: 6px 16px;
 			text-align: center;
 			text-decoration: none;
 			display: inline-block;
-			font-size: 16px;
+			font-size: 12px;
 			margin: 4px 2px;
 			transition-duration: 0.4s;
 			cursor: pointer;
@@ -57,12 +60,12 @@
 
 		.button1vue {
 			background-color: white;
-			color: black;
-			border: 2px solid #4CAF50;
+			color: #47c9af;
+			border: 2px solid #47c9af;
 		}
 
 		.button1vue:hover {
-			background-color: #4CAF50;
+			background-color: #47c9af;
 			color: white;
 		}
 
@@ -288,22 +291,11 @@
 	border-style: solid;
 	border-color: red;
 	border: 10px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-right: 0px;
-	margin-left: 0px;
-	padding-top: 10px;
-	padding-right: 0px;
-	padding-bottom: 10px;
-	padding-left: 0px;
 }
 .btn-vue {
 	margin-right: 10px;
 	margin-left: 10px;
-			padding-top: 10px;
-			padding-right: 10px;
-			padding-bottom: 10px;
-			padding-left: 10px;
+
 }
 
     </style>
@@ -316,17 +308,6 @@
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script type="text/javascript"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-
-		function gtag() {
-			dataLayer.push(arguments);
-		}
-		gtag('js', new Date());
-
-
-		gtag('config', 'UA-23581568-13');
-	</script>
 
 
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -337,8 +318,9 @@
 <body>
 <div id='cssmenu'>
 	<ul>
-		<li id="n1" onclick="openCloseKl()"><a href='#'>Anasayfa</a></li>
-		<li id="n2" onclick="openClosePl()"><a href='#'>Öğrenciye Proje Atama</a></li>
+		<li id="n1" onclick="openPl()"><a href='#'>Anasayfa</a></li>
+		<li id="n2" onclick="openKl()"><a href='#'>Öğrenciye Proje Atama</a></li>
+		<li id="n3" onclick="openMl()"><a href='#'>Mesaj</a></li>
 	</ul>
 </div>
 
@@ -353,33 +335,32 @@
 					<th>Durum</th>
 					<th>Son İşlem Tarihi</th>
 					<th>Aşama Seçim</th>
-					<th>Onaylama</th>
+					<th>İşlem</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="proje in projeList" :key="proje.projeId">
+				<tr v-for="proje in projeList" :key="proje.id">
 					<td>{{proje.tckn}}</td>
 					<td>{{proje.adSoyad}}</td>
-					<td>{{proje.projeKonusu}}</td>
+					<td>{{proje.projeAdi}}</td>
 					<td>{{proje.durum}}</td>
 					<td>{{proje.sonIslemTarihi}}</td>
-					<td><select v-model="selected">
+					<td><select v-model="proje.selected">
 							<option disabled value="">Seçiniz</option>
 							<option value="1">Analiz</option>
 							<option value="2">Tasarım</option>
 							<option value="3">Gerçekleme</option>
 						</select>
-
 					</td>
-					<td><button v-on:click="save('{{proje.projeId}}', '{{ selected }}')">Onayla</button></td>
+					<td><button class="button-vue button1vue" v-on:click="save(proje.id, proje.selected)">Onayla</button></td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
+</div>
 
-
-
-<div class="row">
+<div id = "ml" class="container">
+<div id = "mesajPanel" class="row">
 	<!-- BEGIN INBOX -->
 	<div class="col-md-12">
 		<div class="grid email">
@@ -392,15 +373,11 @@
 
 						<hr>
 
-						<div>
+						<div id = "mesajBox">
 							<ul class="nav nav-pills nav-stacked">
 								<li class="header">Klasörler</li>
-								<li class="active"><a href="#"><i class="fa fa-inbox"></i> Gelen mesaj</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Yıldızlı</a></li>
-								<li><a href="#"><i class="fa fa-bookmark"></i> Önemli</a></li>
-								<li><a href="#"><i class="fa fa-mail-forward"></i> Gönderilen</a></li>
-								
-								
+								<li id="gelen-1" v-on:click="getMesajList(1)"><a href="#"><i class="fa fa-inbox"></i> Gelen mesaj</a></li>
+								<li id="gonderilen-1" v-on:click="getMesajList(2)"><a href="#"><i class="fa fa-mail-forward"></i> Gönderilen</a></li>
 							</ul>
 						</div>
 					</div>
@@ -414,7 +391,7 @@
 									<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
 								</label>
 								<div class="btn-group">
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 										 <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu" role="menu">
@@ -424,11 +401,11 @@
 										<li class="divider"></li>
 										
 										<li><a href="#">Sil</a></li>
-									</ul>
+									</ul>-->
 								</div>
 							</div>
 
-							<div class="col-md-6 search-form">
+							<!--<div class="col-md-6 search-form">
 								<form action="#" class="text-right">
 									<div class="input-group">
 										<input type="text" class="form-control input-sm" placeholder="Arama">
@@ -436,35 +413,22 @@
                                             <button type="submit" name="search" class="btn_ btn-primary btn-sm search"><i class="fa fa-search"></i></button></span>
 									</div>			 
 								</form>
-							</div>
+							</div>-->
 						</div>
 						
 						<div class="padding"></div>
 						
 						<div class="table-responsive">
-							<div id="mesajListesi">
-								<table>
-									<thead class="thead-dark">
-									<tr>
-										<th>Mesaj Başlığı</th>
-										<th>Mesaj Konusu</th>
-										<th>Gönderici</th>
-										<th>Gönderilme Tarihi</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr v-for="mesaj in mesajListesi" :key="mesaj.id">
-										<td>{{proje.mesajbasligi}}</td>
-										<td>{{proje.mesajkonusu}}</td>
-										<td>{{proje.gonderenkullaniciAdi}}</td>
-										<td>{{proje.tarih}}</td>
-									</tr>
-									</tbody>
-								</table>
-							</div>
+							<table class="table">
+								<tbody><tr v-for="mesaj in mesajList" :key="mesaj.id">
+									<td class="name"><a @click="openModal(mesaj)" href="#" >{{mesaj.mesajbasligi}}</a></td>
+									<td class="subject"><a href="#">{{mesaj.mesajbasligi}} </a></td>
+									<td class="time">{{mesaj.tarih}}</td>
+								</tr>
+								</tbody></table>
 						</div>
 
-						<ul class="pagination">
+						<!--<ul class="pagination">
 							<li class="disabled"><a href="#">«</a></li>
 							<li class="active"><a href="#">1</a></li>
 							<li><a href="#">2</a></li>
@@ -472,14 +436,13 @@
 							<li><a href="#">4</a></li>
 							<li><a href="#">5</a></li>
 							<li><a href="#">»</a></li>
-						</ul>						
+						</ul>-->
 					</div>
 					<!-- END INBOX CONTENT -->
 					
 					<!-- BEGIN COMPOSE MESSAGE -->
-					<div class="modal fade" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true">
-						<div class="modal-wrapper">
-							<div class="modal-dialog">
+					<div class="modal" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;">
+							<div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
 								<div class="modal-content">
 									<div class="modal-header bg-blue">
 										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -507,8 +470,40 @@
 									</form>
 								</div>
 							</div>
-						</div>
 					</div>
+					<!-- END COMPOSE MESSAGE -->
+					<!-- BEGIN COMPOSE MESSAGE -->
+					<div class="modal" id="mesaj-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;">
+						<div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
+								<div class="modal-content">
+									<div class="modal-header bg-blue">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="exitModal()">×</button>
+										<h4 id= "mesaj-modal-baslik" class="modal-title"><i class="fa fa-envelope"></i> Mesaj</h4>
+									</div>
+									<form action="#" method="post">
+										<div class="modal-body">
+											<div class="form-group">
+												<input id = "form-input-kimden" name="to" type="email" class="form-control" placeholder="Kimden" readonly>
+											</div>
+
+											<div class="form-group">
+												<input id= "form-input-konu" name="subject" type="email" class="form-control" placeholder="Konu" readonly>
+											</div>
+											<div class="form-group">
+												<textarea id = "form-input-icerik" name="message" id="email_message_msj" class="form-control" readonly placeholder="Mesaj" style="height: 120px;"></textarea>
+											</div>
+											<div class="form-group">														<input type="file" name="attachment">
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button id= "exit-1" type="button" class="btn btn-default" data-dismiss="modal" onClick="exitModal()"><i class="fa fa-times"></i> Çıkış</button>
+											<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope"></i> Cevapla</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
 					<!-- END COMPOSE MESSAGE -->
 				</div>
 			</div>
@@ -516,7 +511,8 @@
 	</div>
 	<!-- END INBOX -->
 </div>
-</div >
+</div>
+
 		<div id = "kl" class="container">
 			<div id="kullaniciListele">
 				<table>
@@ -532,24 +528,45 @@
 					<tr v-for="kullanici in kullaniciList" :key="kullanici.id">
 						<td>{{kullanici.tcNo}}</td>
 						<td>{{kullanici.adSoyad}}</td>
-						<td class = "btn-vue"><input id="deneme" class = "btn-vue-txt" v-model="projeKonusu" placeholder="" ></td>
-						<td><div id = "saveProjeKonusu"><button class="button-vue button1vue" v-on:click="saveProjeKonusu( kullanici.id )">Kaydet</button></div></td>
+						<td class = "btn-vue"><input id="projeKonusuId" class = "btn-vue-txt" v-model="kullanici.projeKonusu" placeholder="" ></td>
+						<td><button class="button-vue button1vue" v-on:click="saveProjeKonusu(kullanici.id, kullanici.projeKonusu)">Kaydet</button></td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
+<!--
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Small Modal</button>
 
+
+<div class="modal" id="myModal" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Öğrenciye Proje Atama</h4>
+			</div>
+			<div class="modal-body">
+				<p>İşlem başarıyla gerçekleşmiştir.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+			</div>
+		</div>
+	</div>
+</div>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
-	//var cssmenu = document.getElementById("cssmenu");
-	//var btns = cssmenu.getElementsByClassName("li");
-	openClose("kl");
+	var kullaniciId = getParameterByName('kullaniciId');
+
+	openPl();
 	let navbar = document
 			.getElementById("cssmenu")
 			.querySelectorAll('li');
+	navbar[0].className += " active";
+
 	for (var i = 0; i < navbar.length; i++) {
 		navbar[i].addEventListener("click", function() {
 			var current = document.getElementsByClassName("active");
@@ -559,28 +576,58 @@
 			this.className += " active";
 		});
 	}
-	function openCloseKl(){
-		openClose("kl");
+	function openPl(){
+		open("pl");
 	}
-	function openClosePl(){
-		openClose("pl");
+	function openKl(){
+		open("kl");
 	}
-	function openClose(param) {
+	function openMl(){
+		open("ml");
+	}
+	function open(param) {
 		var pl = document.getElementById("pl");
 		var kl = document.getElementById("kl");
+		var ml = document.getElementById("ml");
 		if(param=="pl"){
-				pl.style.display = "none";
-				kl.style.display = "block";
+				pl.style.display = "block";
+				kl.style.display = "none";
+				ml.style.display = "none";
+		}
+		else if(param=="kl"){
+			kl.style.display = "block";
+			pl.style.display = "none";
+			ml.style.display = "none";
 		}
 		else{
+			ml.style.display = "block";
 			kl.style.display = "none";
-			pl.style.display = "block";
+			pl.style.display = "none";
+
 		}
 
 	}
+
+	let mesajBox = document
+			.getElementById("mesajBox")
+			.querySelectorAll('li');
+
+	for (var i = 1; i < mesajBox.length; i++) {
+		mesajBox[i].addEventListener("click", function() {
+			var current = document.getElementsByClassName("active");
+			if (current.length > 0) {
+				current[1].className = current[1].className.replace(" active", "");
+			}
+			this.className += " active";
+		});
+	}
+
 
 	new Vue({
 		el: "#kullaniciListele",
+		data: {
+			isBasariliMi : false
+		},
 		data() {
 			return {
 				kullaniciList: []
@@ -595,21 +642,112 @@
 					.catch(function (error) {
 						console.log(error);
 					})
+		},
+		methods: {
+			saveProjeKonusu: function (kullaniciId, projeKonusu) {
+				axios
+						.post('http://localhost:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId)
+						.then(response => {
+							console.log("basarili");
+
+						})
+						.catch(function (error) {
+							console.log(error);
+						})
+			}
+		}
+	})
+
+	new Vue({
+		el: "#projeListesi",
+		data() {
+			return {
+				projeList: []
+			}
+		},
+		mounted: function() {
+			axios
+					.post('http://localhost:8081/projeyonetim/projeListele')
+					.then(response => {
+						this.projeList = response.data.projeList
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+		},
+		methods: {
+			save: function (projeId, durum) {
+				axios
+						.post('http://localhost:8081/projeyonetim/projeOnayGuncelle',{projeId:projeId,durum:durum})
+						.then(response => {
+							console.log("basarili");
+						})
+						.catch(function (error) {
+							console.log(error);
+						})
+			}
 		}
 	})
 
 
+	function openl(mesaj){
+		var element1 = document.getElementById("form-input-kimden");
+		element1.value = mesaj.gonderenkullaniciid;
+		var element2 = document.getElementById("form-input-konu");
+		element2.value = mesaj.mesajkonusu;
+		var element3 = document.getElementById("form-input-icerik");
+		element3.value = mesaj.mesajicerigi;
+		var modal = document.getElementById("mesaj-modal");
+		modal.style.display = "block";
+
+
+	}
+
+
+
+	function exitModal(){
+		var modal = document.getElementById("mesaj-modal");
+		modal.style.display = "none";
+	}
+
+	function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+				results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
+
+
 
 	new Vue({
-		el: '#saveProjeKonusu',
+		el: "#mesajPanel",
+		data() {
+			return {
+				mesajList: []
+			}
+		},
+		mounted: function() {
+			axios
+					.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId+'&kim='+1) // gelenMesaj
+					.then(response => {
+						this.mesajList = response.data.mesajList
+					})
+					.catch(function (error) {
+						console.log(error);
+					})
+		},
 		methods: {
-			saveProjeKonusu: function (kullaniciId) {
-				var projeKonusu = document.getElementById('deneme').value;
+			openModal: function (mesaj) {
+				openl(mesaj);
+			},
+			getMesajList: function(kim){
 				axios
-						.post('http://localhost:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId)
+						.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId+'&kim='+kim) // gönderilenkullaniciid
 						.then(response => {
-							//this.isBasariliMi = response.data.isBasariliMi;
-
+							this.mesajList = response.data.mesajList
 						})
 						.catch(function (error) {
 							console.log(error);
