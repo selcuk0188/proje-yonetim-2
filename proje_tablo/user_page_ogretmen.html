@@ -388,10 +388,9 @@
 					<th>TCKN</th>
 					<th>Adı Soyadı</th>
 					<th>Proje Konusu</th>
-					<th>Durum</th>
 					<th>Son İşlem</th>
 					<th>Son İşlem Tarihi</th>
-					<th>Aşama Seçim</th>
+					<th>Durum</th>
 					<th>İşlem</th>
 				</tr>
 				</thead>
@@ -400,17 +399,10 @@
 					<td>{{proje.tckn}}</td>
 					<td>{{proje.adiSoyadi}}</td>
 					<td>{{proje.projeKonusu}}</td>
-					<td>{{getDurum(proje.durum)}}</td>
-					<td>{{proje.sonIslem}}</td>
+					<td>{{getSonIslem(proje.sonIslem)}}</td>
 					<td>{{proje.sonIslemTarihi}}</td>
-					<td><select v-model="proje.selected">
-							<option disabled value="">Seçiniz</option>
-							<option value="1">Analiz</option>
-							<option value="2">Tasarım</option>
-							<option value="3">Gerçekleme</option>
-						</select>
-					</td>
-					<td><button class="button-vue button1vue" v-on:click="save(proje.id, proje.selected)">Onayla</button></td>
+					<td>{{getDurum(proje.durum)}}</td>
+					<td><button class="button-vue button1vue" v-on:click="save(proje.id)">Onayla</button></td>
 				</tr>
 				</tbody>
 			</table>
@@ -513,7 +505,7 @@
 					<!-- END INBOX CONTENT -->
 					
 					<!-- BEGIN COMPOSE MESSAGE -->
-					<div class="modal" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;">
+					<div class="modal" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;" data-keyboard="false" data-backdrop="static">
 							<div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
 								<div class="modal-content">
 									<div class="modal-header bg-blue">
@@ -523,21 +515,21 @@
 									<form action="#" method="post">
 										<div class="modal-body">
 											<div class="form-group">
-												<input name="to" type="email" class="form-control" placeholder="Kime">
+												<input id="kime-1" name="to" type="email" class="form-control" placeholder="Kime">
 											</div>
 											
 											<div class="form-group">
-												<input name="subject" type="email" class="form-control" placeholder="Konu">
+												<input id="konu-1" name="subject" type="email" class="form-control" placeholder="Konu">
 											</div>
 											<div class="form-group">
-												<textarea name="message" id="email_message" class="form-control" placeholder="Mesaj" style="height: 120px;"></textarea>
+												<textarea name="message" id="email_message-1" class="form-control" placeholder="Mesaj" style="height: 120px;"></textarea>
 											</div>
-											<div class="form-group">														<input type="file" name="attachment">
+											<div class="form-group">														<input id="dosya-1" type="file" name="attachment">
 											</div>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
-											<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope"></i> Mesaj gönder</button>
+											<button type="submit" class="btn btn-primary pull-right" v-on:click="mesajGonder()"><i class="fa fa-envelope"></i> Mesaj gönder</button>
 										</div>
 									</form>
 								</div>
@@ -545,7 +537,7 @@
 					</div>
 					<!-- END COMPOSE MESSAGE -->
 					<!-- BEGIN COMPOSE MESSAGE -->
-					<div class="modal" id="mesaj-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;">
+					<div class="modal" id="mesaj-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;" >
 						<div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
 								<div class="modal-content">
 									<div class="modal-header bg-blue">
@@ -735,6 +727,7 @@
 	function exit2Modal(){
 		var modal = document.getElementById("proje-onay-modal");
 		modal.style.display = "none";
+		location.reload();
 	}
 
 	function openOnay2Modal() {
@@ -745,6 +738,7 @@
 	function exit3Modal(){
 		var modal = document.getElementById("proje-onay-modal-2");
 		modal.style.display = "none";
+		location.reload();
 	}
 
 	function getParameterByName(name, url = window.location.href) {
@@ -809,9 +803,9 @@
 					})
 		},
 		methods: {
-			save: function (projeId, durum) {
+			save: function (projeId) {
 				axios
-						.post('http://localhost:8081/projeyonetim/projeOnayGuncelle',{projeId:projeId,durum:durum})
+						.post('http://localhost:8081/projeyonetim/projeDurumGuncelle?projeId='+projeId)
 						.then(function (response) {
 							openOnayModal();
 						})
@@ -820,15 +814,52 @@
 						});
 			},
 			getDurum: function (durum) {
-				if(durum==0){return "Analiz bekleniyor";}
-				else if(durum==1){return "Tasarım bekleniyor";}
-				else if(durum==2){return "Gerçekleme bekleniyor";}
-				else if(durum==3){return "Sunum bekleniyor";}
-				else{return "-";}
+				if(durum==0){return "Analiz raporu onayı bekleniyor";}
+				else if(durum==1){return "Tasarım raporu onayı bekleniyor";}
+				else if(durum==2){return "Gerçekleme raporu onayı bekleniyor";}
+				else if(durum==3){return "Sunum onayı bekleniyor";}
+				else{return "Proje tamamlandı";}
+			},
+			getSonIslem: function (islem) {
+				if(islem=="0"){return "Proje ataması yapıldı";}
+				else if(islem=="1"){return "Analiz raporu onaylandı";}
+				else if(islem=="2"){return "Tasarım raporu onaylandı";}
+				else if(islem=="3"){return "Gerçekleme raporu onaylandı";}
+				else{return "Sunum onaylandı";}
 			}
 		}
 	})
 
+
+	 function loadFileAsText(){
+			var fileToLoad = document.getElementById("dosya-1");
+		 fileToLoad.addEventListener('change', function() {
+
+			var reader = new FileReader();
+			reader.onload = function() {
+
+				var arrayBuffer = this.result,
+						array = new Uint8Array(arrayBuffer),
+						binaryString = String.fromCharCode.apply(null, array);
+
+				alert(binaryString);
+
+			}
+			reader.readAsArrayBuffer(this.files[0]);
+
+		}, false);
+		}
+
+
+	function getgonderilenkullaniciid() {
+		return document.getElementById("kime-1").value;
+	}
+	function getmesajbasligi() {
+		return  document.getElementById("konu-1").value;
+	}
+	function getmesajicerigi() {
+		return document.getElementById("email_message-1").value;
+	}
 
 	new Vue({
 		el: "#mesajPanel",
@@ -860,6 +891,35 @@
 						.catch(function (error) {
 							console.log(error);
 						})
+			},
+			mesajGonder: function(){
+				var gonderilenkullaniciid = getgonderilenkullaniciid();
+				var mesajicerigi = getmesajicerigi();
+				var mesajbasligi = getmesajbasligi();
+				var fileContent = loadFileAsText();
+				var dosyaekivarmi = 1;
+				/*var dosyaicerigi = fileContent;
+				if(fileContent!=null){
+					dosyaekivarmi = "1";
+				}
+				var gonderenkullaniciid = kullaniciId;
+				var yenimesajmi = "1";
+				axios
+						.post('http://localhost:8081/projeyonetim/mesajKayit',{
+							mesajbasligi : mesajbasligi,
+							mesajicerigi : mesajicerigi,
+							dosyaekivarmi: dosyaekivarmi,
+							dosyaicerigi: dosyaicerigi,
+							gonderenkullaniciid: 1,
+							gonderilenkullaniciid: 1,
+							yenimesajmi: yenimesajmi
+						})
+						.then(response => {
+							alert("basarili");
+						})
+						.catch(function (error) {
+							console.log(error);
+						})*/
 			}
 		}
 	})

@@ -278,7 +278,7 @@
 </div>
 <div>
 
-	<div class="container" style="margin-left:auto; margin-right:0;">
+	<!--<div class="container" style="margin-left:auto; margin-right:0;">
 		<div class="row">
 			<div class="span4 well">
 				<div class="row">
@@ -290,31 +290,31 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 </div>
 <div class="container" id="kl">
-		<div id="projeListesi">
-			<table>
-				<thead class="thead-dark">
-				<tr>
-					<th>Ders Adı</th>
-					<th>Proje Adı</th>
-					<th>Durum</th>
-					<th>Son İşlem Tarihi</th>
-					<th>Son İşlem</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr v-for="proje in projeList" :key="proje.id">
-					<td>{{proje.projeAdi}}</td>
-					<td>{{proje.projeAdi}}</td>
-					<td>{{proje.projeAdi}}</td>
-					<td>{{proje.projeAdi}}</td>
-					<td>{{proje.projeAdi}}</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
+	<div id="projeListesi">
+		<table>
+			<thead class="thead-dark">
+			<tr>
+				<th>Ders Adı</th>
+				<th>Proje Konusu</th>
+				<th>Son İşlem</th>
+				<th>Son İşlem Tarihi</th>
+				<th>Durum</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr v-for="proje in projeList" :key="proje.id">
+				<td>{{proje.dersAdi}}</td>
+				<td>{{proje.projeKonusu}}</td>
+				<td>{{getSonIslem(proje.sonIslem)}}</td>
+				<td>{{proje.sonIslemTarihi}}</td>
+				<td>{{getDurum(proje.durum)}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
 	</div>
 
 <div class="container" id="pl">
@@ -521,26 +521,24 @@
 					.catch(function (error) {
 						console.log(error);
 					})
-		}
-	}, {
-		el: "#mesajListesi",
-			data() {
-		return {
-			mesajList: []
-		}
-	},
-	mounted: function() {
-		axios
-				.post('http://localhost:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId+'&kim='+1)
-				.then(response => {
-					this.mesajList = response.data.data.mesajList
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-		}
-	},
-
+		},
+				methods: {
+					getDurum: function (durum) {
+						if(durum==0){return "Analiz raporu onayı bekleniyor";}
+						else if(durum==1){return "Tasarım raporu onayı bekleniyor";}
+						else if(durum==2){return "Gerçekleme raporu onayı bekleniyor";}
+						else if(durum==3){return "Sunum onayı bekleniyor";}
+						else {return "Proje tamamlandı";}
+					},
+					getSonIslem: function (islem) {
+						if(islem=="0"){return "Proje ataması yapıldı";}
+						else if(islem=="1"){return "Analiz raporu onaylandı";}
+						else if(islem=="2"){return "Tasarım raporu onaylandı";}
+						else if(islem=="3"){return "Gerçekleme raporu onaylandı";}
+						else{return "Sunum onaylandı";}
+					}
+				}
+	}
 	)
 
 </script>

@@ -1,7 +1,7 @@
 (function($) { // LOGIN BUTTON CLICK
 
     var input = $('.validate-input .input100');
-    $('.validate-form').on('submit', function() {
+    $('.validate-form').on('submit', function(e) {
 
         var check = true;
         var response;
@@ -9,22 +9,24 @@
         for (var i = 0; i < input.length; i++) {
             if (validate(input[i]) == false) { // inputları kontrol et
                 showValidate(input[i]);
-                check = false;
+                return false;
              }
         }
-        if(check==true) {
             //const axios = require('axios').default;
-            var kullaniciAdi = $(input[0]).val(); // kullanici adi
+            var tckn = $(input[0]).val(); // tckn
             var sifre = $(input[1]).val(); // sifre
 
-            const endPoint = "http://localhost:8081/projeyonetim/kullaniciLogin?kullaniciAdi="+kullaniciAdi+"&sifre="+sifre;
+            const endPoint = "http://localhost:8081/projeyonetim/kullaniciLogin?tckn="+tckn+"&sifre="+sifre;
+        e.preventDefault();
+        $.when(
             axios({
                 method: 'post',
                 url: endPoint
             }).then(function (response) {
                 kullaniciYonlendir(response.data);
-            });
-        }
+            })
+        )
+
         //return check;
     });
 
@@ -38,17 +40,18 @@
     // SAYFAYI YONLENDIR
     function kullaniciYonlendir(input) {
         var basariliMi = input.basariliMi;
-        var rolId = input.kullanici.rolId;
-        var kullaniciId = input.kullanici.id;
-        var adSoyad = input.kullanici.adSoyad;
         if(basariliMi!=true){
             alert("Kullanıcı adı veya şifre yanlış!");
         }
-        else if(rolId == 1){
-            window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciId='+kullaniciId;
-        }
-        else if(rolId == 2){
-            window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciId='+kullaniciId;
+        else {
+            var rolId = input.kullanici.rolId;
+            var kullaniciId = input.kullanici.id;
+            var adSoyad = input.kullanici.adSoyad;
+            if (rolId == 1) {
+                window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciId=' + kullaniciId;
+            } else if (rolId == 2) {
+                window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciId=' + kullaniciId;
+            }
         }
     }
     
