@@ -16,7 +16,7 @@
             var tckn = $(input[0]).val(); // tckn
             var sifre = $(input[1]).val(); // sifre
 
-            const endPoint = "http://localhost:8081/projeyonetim/kullaniciLogin?tckn="+tckn+"&sifre="+sifre;
+            const endPoint = "http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciLogin?tckn="+tckn+"&sifre="+sifre;
         e.preventDefault();
         $.when(
             axios({

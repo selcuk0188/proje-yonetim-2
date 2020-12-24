@@ -318,147 +318,149 @@
 	</div>
 
 <div class="container" id="pl">
-<div class="row">
-	<!-- BEGIN INBOX -->
-	<div class="col-md-12">
-		<div class="grid email">
-			<div class="grid-body">
-				<div class="row">
-					<!-- BEGIN INBOX MENU -->
-					<div class="col-md-3">
-						<h2 class="grid-title"><i class="fa fa-inbox"></i> GELEN KUTUSU</h2>
-						<a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;YENİ MESAJ</a>
+    <div id = "mesajPanel" class="row">
+        <!-- BEGIN INBOX -->
+        <div class="col-md-12">
+            <div class="grid email">
+                <div class="grid-body">
+                    <div class="row">
+                        <!-- BEGIN INBOX MENU -->
+                        <div class="col-md-3">
+                            <h2 class="grid-title"><i class="fa fa-inbox"></i> GELEN KUTUSU</h2>
+                            <a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;YENİ MESAJ</a>
 
-						<hr>
+                            <hr>
 
-						<div>
-							<ul class="nav nav-pills nav-stacked">
-								<li class="header">Klasörler</li>
-								<li class="active"><a href="#"><i class="fa fa-inbox"></i> Gelen mesaj</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Yıldızlı</a></li>
-								<li><a href="#"><i class="fa fa-bookmark"></i> Önemli</a></li>
-								<li><a href="#"><i class="fa fa-mail-forward"></i> Gönderilen</a></li>
-								
-								
-							</ul>
-						</div>
-					</div>
-					<!-- END INBOX MENU -->
-					
-					<!-- BEGIN INBOX CONTENT -->
-					<div class="col-md-9">
-						<div class="row">
-							<div class="col-sm-6">
-								<label style="margin-right: 8px;" class="">
-									<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
-								</label>
-								<div class="btn-group">
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-										 <span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" role="menu">
-										<li><a href="#">Okundu olarak işaretle</a></li>
-										<li><a href="#">Okunmamış olarak işaretle </a></li>
-										<li><a href="#">Önemli olarak işaretle</a></li>
-										<li class="divider"></li>
-										
-										<li><a href="#">Sil</a></li>
-									</ul>
-								</div>
-							</div>
+                            <div id = "mesajBox">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li class="header">Klasörler</li>
+                                    <li id="gelen-1" v-on:click="getMesajList(1)"><a href="#"><i class="fa fa-inbox"></i> Gelen Mesaj</a></li>
+                                    <li id="gonderilen-1" v-on:click="getMesajList(2)"><a href="#"><i class="fa fa-mail-forward"></i> Gönderilen Mesaj</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- END INBOX MENU -->
 
-							<div class="col-md-6 search-form">
-								<form action="#" class="text-right">
-									<div class="input-group">
-										<input type="text" class="form-control input-sm" placeholder="Arama">
-										<span class="input-group-btn">
-                                            <button type="submit" name="search" class="btn_ btn-primary btn-sm search"><i class="fa fa-search"></i></button></span>
-									</div>			 
-								</form>
-							</div>
-						</div>
-						
-						<div class="padding"></div>
-						
-						<div class="table-responsive">
-							<div id="mesajListesi">
-								<table>
-									<thead class="thead-dark">
-									<tr>
-										<th>Mesaj Başlığı</th>
-										<th>Mesaj Konusu</th>
-										<th>Gönderici</th>
-										<th>Gönderilme Tarihi</th>
-									</tr>
-									</thead>
-									<tbody>
-									<tr v-for="mesaj in mesajListesi" :key="mesaj.id">
-										<td>{{proje.mesajbasligi}}</td>
-										<td>{{proje.mesajkonusu}}</td>
-										<td>{{proje.gonderenkullaniciAdi}}</td>
-										<td>{{proje.tarih}}</td>
-									</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
+                        <!-- BEGIN INBOX CONTENT -->
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label style="margin-right: 8px;" class="">
+                                        <div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
+                                    </label>
+                                    <div class="btn-group">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="padding"></div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                    <tr>
+                                        <th>Konu</th>
+                                        <th>Gönderen</th>
+                                        <th>Kime</th>
+                                        <th>Tarih</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody><tr v-for="mesaj in mesajList" :key="mesaj.id">
+                                        <td class="name"><a @click="openModal(mesaj)" href="#" >{{mesaj.mesajbasligi}}</a></td>
+                                        <td class="subject">{{mesaj.gonderenAdSoyad}} </a></td>
+                                        <td class="subject">{{mesaj.gonderilenAdSoyad}} </a></td>
+                                        <td class="time">{{mesaj.tarih}}</td>
+                                    </tr>
+                                    </tbody></table>
+                            </div>
+                        </div>
+                        <!-- END INBOX CONTENT -->
 
-						<ul class="pagination">
-							<li class="disabled"><a href="#">«</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">»</a></li>
-						</ul>						
-					</div>
-					<!-- END INBOX CONTENT -->
-					
-					<!-- BEGIN COMPOSE MESSAGE -->
-					<div class="modal" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;">
-						<div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
-							<div class="modal-content">
-								<div class="modal-header bg-blue">
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-									<h4 class="modal-title"><i class="fa fa-envelope"></i> Yeni Mesaj Oluşturun</h4>
-								</div>
-								<form action="#" method="post">
-									<div class="modal-body">
-										<div class="form-group">
-											<input name="to" type="email" class="form-control" placeholder="Kime">
-										</div>
-
-										<div class="form-group">
-											<input name="subject" type="email" class="form-control" placeholder="Konu">
-										</div>
-										<div class="form-group">
-											<textarea name="message" id="email_message" class="form-control" placeholder="Mesaj" style="height: 120px;"></textarea>
-										</div>
-										<div class="form-group">														<input type="file" name="attachment">
-										</div>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
-										<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope"></i> Mesaj gönder</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-					<!-- END COMPOSE MESSAGE -->
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- END INBOX -->
-</div>
+                        <!-- BEGIN COMPOSE MESSAGE -->
+                        <div class="modal" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 400px;width:600px;overflow-y: hidden;" data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog" style="width:100%;width:100%;margin-top: 0px;margin-bottom: 0px">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-blue">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title"><i class="fa fa-envelope"></i> Yeni Mesaj Oluşturun</h4>
+                                    </div>
+                                    <form action="#" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div id="app" >
+                                                    <input id="kime-1" type="text" v-model="user" list="userList"  @change="onChange" placeholder="Kime">
+                                                    <datalist id="userList">
+                                                        <option v-for="user in userList">{{user.id}}-{{user.adSoyad}}</option>
+                                                    </datalist>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <input id="konu-1" name="subject" type="text" class="form-control" placeholder="Konu">
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea name="message" id="email_message-1" class="form-control" placeholder="Mesaj" style="height: 120px;"></textarea>
+                                            </div>
+                                            <div class="form-group">														<input id="dosya-1" type="file" name="attachment">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
+                                            <button type="submit" class="btn btn-primary pull-right" v-on:click="mesajGonder()"><i class="fa fa-envelope"></i> Mesaj gönder</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END COMPOSE MESSAGE -->
+                        <!-- BEGIN COMPOSE MESSAGE -->
+                        <div class="modal" id="mesaj-modal" tabindex="-1" role="dialog" aria-hidden="true" style="position: fixed;height: 500px;width:600px;overflow-y: hidden;" >
+                            <div class="modal-dialog" style="width:100%;height:100%;margin-top: 0px;margin-bottom: 0px">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-blue">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="exitModal()">×</button>
+                                        <h4 id= "mesaj-modal-baslik" class="modal-title"><i class="fa fa-envelope"></i> Mesaj</h4>
+                                    </div>
+                                    <form action="#" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="form-input-kimden">Gönderen: </label>
+                                                <input id = "form-input-kimden" name="to" type="email" class="form-control" placeholder="Kimden" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="form-input-kime">Kime: </label>
+                                                <input id = "form-input-kime" name="to" type="email" class="form-control" placeholder="Kime" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="form-input-konu">Konu: </label>
+                                                <input id= "form-input-konu" name="subject" type="email" class="form-control" placeholder="Konu" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="form-input-icerik">Mesaj: </label>
+                                                <textarea id="form-input-icerik" name="message" class="form-control" placeholder="Mesaj" style="height: 120px;" readonly></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <a style="font-size:15px;font-weight: bold;" id="dosya-indir-href" href="" download="rapor.pdf">Dosya İndir</a>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button id= "exit-1" type="button" class="btn btn-default" data-dismiss="modal" onClick="exitModal()"><i class="fa fa-times"></i> Çıkış</button>
+                                            <button id= "cevapla-1"  data-toggle="modal" data-target="#compose-modal" type="button" class="btn btn-primary pull-right" onClick="cevapla()"><i class="fa fa-envelope"></i> Cevapla</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END COMPOSE MESSAGE -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END INBOX -->
+    </div>
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-
+    var kullaniciId = getParameterByName('kullaniciId');
 	openKl();
 	let navbar = document
 			.getElementById("cssmenu")
@@ -474,6 +476,20 @@
 			this.className += " active";
 		});
 	}
+
+    let mesajBox = document
+        .getElementById("mesajBox")
+        .querySelectorAll('li');
+
+    for (var i = 1; i < mesajBox.length; i++) {
+        mesajBox[i].addEventListener("click", function() {
+            var current = document.getElementsByClassName("active");
+            if (current.length > 0) {
+                current[1].className = current[1].className.replace(" active", "");
+            }
+            this.className += " active";
+        });
+    }
 	function openPl(){
 		open("pl");
 	}
@@ -503,6 +519,95 @@
 		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
+    function openl(mesaj){
+        var element1 = document.getElementById("form-input-kimden");
+        element1.value = mesaj.gonderenAdSoyad;
+        var element2 = document.getElementById("form-input-konu");
+        element2.value = mesaj.mesajbasligi;
+        var element3 = document.getElementById("form-input-icerik");
+        element3.value = mesaj.mesajicerigi;
+        var element4 = document.getElementById("form-input-kime");
+        element4.value = mesaj.gonderilenAdSoyad;
+        var element5 = document.getElementById("dosya-indir-href");
+        if(mesaj.dosyaekivarmi!="0"){
+            element5.href = mesaj.dosyaicerigi;
+            element5.download = "rapor.pdf";
+            element5.value = "Dosya indir";
+            element5.style.display = "block";
+        }
+        else{
+            element5.style.display = "none";
+        }
+        var modal = document.getElementById("mesaj-modal");
+        modal.style.display = "block";
+    }
+
+    function cevapla(){
+        var kime = document.getElementById("kime-1");
+        kime.value = document.getElementById("form-input-kimden").value;
+        var konu = document.getElementById("konu-1");
+        konu.value = document.getElementById("form-input-konu").value;
+        var modal = document.getElementById("mesaj-modal");
+        modal.style.display = "none";
+    }
+
+    function exitModal(){
+        var modal = document.getElementById("mesaj-modal");
+        modal.style.display = "none";
+    }
+
+    function openOnayModal() {
+        var modal = document.getElementById("proje-onay-modal");
+        modal.style.display = "block";
+    }
+
+    function exit2Modal(){
+        var modal = document.getElementById("proje-onay-modal");
+        modal.style.display = "none";
+        location.reload();
+    }
+
+    function openOnay2Modal() {
+        var modal = document.getElementById("proje-onay-modal-2");
+        modal.style.display = "block";
+    }
+
+    function exit3Modal(){
+        var modal = document.getElementById("proje-onay-modal-2");
+        modal.style.display = "none";
+        location.reload();
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    function getgonderilenkullaniciid() {
+        return document.getElementById("kime-1").value;
+    }
+    function getmesajbasligi() {
+        return  document.getElementById("konu-1").value;
+    }
+    function getmesajicerigi() {
+        return document.getElementById("email_message-1").value;
+    }
+    function setUserId() {
+        return document.getElementById("email_message-1").value;
+    }
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
 
 
 	new Vue({
@@ -514,7 +619,7 @@
 		},
 		mounted: function() {
 			axios
-					.post('http://localhost:8081/projeyonetim/projeBykullaniciId?kullaniciId='+getParameterByName('kullaniciId'))
+					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeBykullaniciId?kullaniciId='+getParameterByName('kullaniciId'))
 					.then(response => {
 						this.projeList = response.data.projeList
 					})
@@ -540,6 +645,117 @@
 				}
 	}
 	)
+
+
+    new Vue({
+        el: "#mesajPanel",
+        data:{
+            userId:''
+        },
+        data() {
+            return {
+                mesajList: [],
+                user:'',
+                userList:[]
+            }
+        },
+        mounted: function() {
+            this.getUserList();
+            axios
+                .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId+'&kim='+1) // gelenMesaj
+                .then(response => {
+                    this.mesajList = response.data.mesajList
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        methods: {
+            openModal: function (mesaj) {
+                openl(mesaj);
+            },
+            getMesajList: function(kim){
+                axios
+                    .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajByKullaniciId?kullaniciId=' + kullaniciId + '&kim=' + kim) // gönderilenkullaniciid
+                    .then(response => {
+                        this.mesajList = response.data.mesajList
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+
+            },
+            onChange(event) {
+                this.userId = event.target.value;
+            },
+            mesajGonder: function() {
+                if (this.userId == null || this.userId == '') {
+                    alert("Mesajı kime göndereceğinizi seçiniz!");
+                } else {
+                    this.userId = this.userId.split("-")[0];
+                    var file = document.getElementById('dosya-1').files[0];
+                    var gonderilenkullaniciid = this.userId;
+                    var mesajicerigi = getmesajicerigi();
+                    var mesajbasligi = getmesajbasligi();
+                    var dosyaekivarmi = "0";
+                    var yenimesajmi = "1";
+                    var gonderenkullaniciid = kullaniciId;
+                    if (file != null) {
+                        dosyaekivarmi = "1";
+                        getBase64(file).then(
+                            data => {
+                                axios
+                                    .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajKayit', {
+                                        mesajbasligi: mesajbasligi,
+                                        mesajicerigi: mesajicerigi,
+                                        dosyaekivarmi: dosyaekivarmi,
+                                        dosyaicerigi: data,
+                                        gonderenkullaniciid: Number(gonderenkullaniciid),
+                                        gonderilenkullaniciid: Number(gonderilenkullaniciid),
+                                        yenimesajmi: yenimesajmi
+                                    })
+                                    .then(response => {
+                                        console.log("basarili");
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    })
+                            }
+                        );
+                    }
+                    else{
+                        axios
+                            .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajKayit', {
+                                mesajbasligi: mesajbasligi,
+                                mesajicerigi: mesajicerigi,
+                                dosyaekivarmi: dosyaekivarmi,
+                                dosyaicerigi: "",
+                                gonderenkullaniciid: Number(gonderenkullaniciid),
+                                gonderilenkullaniciid: Number(gonderilenkullaniciid),
+                                yenimesajmi: yenimesajmi
+                            })
+                            .then(response => {
+                                console.log("basarili");
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            })
+                    }
+                    exitModal();
+                }
+            },
+            getUserList: function(){
+                axios
+                    .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListeleHepsi')
+                    .then(response => {
+                        this.userList = response.data.kullaniciList
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            },
+        }
+    })
 
 </script>
 
