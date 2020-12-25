@@ -269,6 +269,30 @@
             display: table;
             clear: both;
         }
+        .button-vue {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 6px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .button1vue {
+            background-color: white;
+            color: #47c9af;
+            border: 2px solid #47c9af;
+        }
+
+        .button1vue:hover {
+            background-color: #47c9af;
+            color: white;
+        }
     </style>
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<script src="vendor/bootstrap/js/popper.js"></script>
@@ -296,25 +320,26 @@
 		<li id="n2" onclick="openPl()"><a href='#'>Mesaj</a></li>
 	</ul>
 </div>
-    <div class="row" style="height: 50px;width:1100px;">
-        <div class="col-md-4">
-            <div class="well well-sm">
-                <div class="media">
-                    <div class="row-1">
+<div class="row" style="height: 75px;width:1100px;">
+    <div class="col-md-4">
+        <div class="well well-sm">
+            <div class="media">
+                <div class="row-1">
                     <div class="column-1">
-                    <img src="profile-pic.png" class="avatar"></a>
+                        <img src="profile-pic.png" class="avatar"></a>
                     </div>
-                    <div class="column-1" style="padding-left: 0px;padding-top: 20px">
-                    <div class="media-body">
-                        <h4 id="profileAdSoyad" class="media-heading"></h4>
-                        <p id="rolName" class="media-heading"></p>
-                    </div>
-                    </div>
+                    <div class="column-1" style="padding-left: 0px;padding-top: 10px">
+                        <div class="media-body">
+                            <h4 id="profileAdSoyad" class="media-heading"></h4>
+                            <p id="rolName" class="media-heading"></p>
+                            <button class="button-vue button1vue" onclick="goToLoginPage()">Çıkış</button></td>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <div>
 
 	<!--<div class="container" style="margin-left:auto; margin-right:0;">
@@ -441,7 +466,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Kapat</button>
                                             <button type="submit" class="btn btn-primary pull-right" v-on:click="mesajGonder()"><i class="fa fa-envelope"></i> Mesaj gönder</button>
                                         </div>
                                     </form>
@@ -560,15 +585,15 @@
 		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
-    function openl(mesaj){
+        function openl(mesaj){
         var element1 = document.getElementById("form-input-kimden");
-        element1.value = mesaj.gonderenAdSoyad;
+        element1.value = mesaj.gonderenkullaniciid +"-"+ mesaj.gonderenAdSoyad;
         var element2 = document.getElementById("form-input-konu");
         element2.value = mesaj.mesajbasligi;
         var element3 = document.getElementById("form-input-icerik");
         element3.value = mesaj.mesajicerigi;
         var element4 = document.getElementById("form-input-kime");
-        element4.value = mesaj.gonderilenAdSoyad;
+        element4.value = mesaj.gonderilenkullaniciid +"-"+ mesaj.gonderilenAdSoyad;
         var element5 = document.getElementById("dosya-indir-href");
         if(mesaj.dosyaekivarmi!="0"){
             element5.href = mesaj.dosyaicerigi;
@@ -626,6 +651,10 @@
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    function goToLoginPage() {
+        window.location.href = '../index.html';
     }
 
     function getgonderilenkullaniciid() {
@@ -751,21 +780,47 @@
             onChange(event) {
                 this.userId = event.target.value;
             },
-            mesajGonder: function() {
-                if (this.userId == null || this.userId == '') {
+            mesajGonder: async function() {
+                var kime = document.getElementById("kime-1");
+                if (kime == null || kime.value=='') {
                     alert("Mesajı kime göndereceğinizi seçiniz!");
                 } else {
-                    this.userId = this.userId.split("-")[0];
-                    var file = document.getElementById('dosya-1').files[0];
-                    var gonderilenkullaniciid = this.userId;
-                    var mesajicerigi = getmesajicerigi();
-                    var mesajbasligi = getmesajbasligi();
+                    this.userId = kime.value.split("-")[0];
+                    const file = document.getElementById('dosya-1').files[0];
+                    const gonderilenkullaniciid = this.userId;
+                    const mesajicerigi = getmesajicerigi();
+                    const mesajbasligi = getmesajbasligi();
                     var dosyaekivarmi = "0";
-                    var yenimesajmi = "1";
-                    var gonderenkullaniciid = kullaniciId;
+                    const yenimesajmi = "1";
+                    const gonderenkullaniciid = kullaniciId;
                     if (file != null) {
-                        dosyaekivarmi = "1";
-                        getBase64(file).then(
+                        const fileToBase64 = async (file) =>
+                            new Promise((resolve, reject) => {
+                                const reader = new FileReader()
+                                reader.readAsDataURL(file)
+                                reader.onload = () => resolve(reader.result)
+                                reader.onerror = (e) => reject(e)
+                            });
+                        const dosyaicerigi = await fileToBase64(file);
+                         dosyaekivarmi = "1";
+                         axios
+                            .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajKayit', {
+                                mesajbasligi: mesajbasligi,
+                                mesajicerigi: mesajicerigi,
+                                dosyaekivarmi: dosyaekivarmi,
+                                dosyaicerigi: dosyaicerigi,
+                                gonderenkullaniciid: Number(gonderenkullaniciid),
+                                gonderilenkullaniciid: Number(gonderilenkullaniciid),
+                                yenimesajmi: yenimesajmi
+                            })
+                            .then(function () {
+                                alert("basarili");
+                            })
+                            .catch(function (error) {
+                                alert(error);
+                            })
+
+                        /*getBase64(file).then(
                             data => {
                                 axios
                                     .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajKayit', {
@@ -777,14 +832,14 @@
                                         gonderilenkullaniciid: Number(gonderilenkullaniciid),
                                         yenimesajmi: yenimesajmi
                                     })
-                                    .then(response => {
-                                        console.log("basarili");
+                                    .then(function () {
+                                        alert("basarili");
                                     })
                                     .catch(function (error) {
-                                        console.log(error);
+                                        alert(error);
                                     })
                             }
-                        );
+                        );*/
                     }
                     else{
                         axios
@@ -798,7 +853,7 @@
                                 yenimesajmi: yenimesajmi
                             })
                             .then(response => {
-                                console.log("basarili");
+                                alert("Mesajınız Başarıyla Gönderilmiştir.");
                             })
                             .catch(function (error) {
                                 console.log(error);

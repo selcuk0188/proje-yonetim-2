@@ -406,7 +406,7 @@ label {
 		<li id="n3" onclick="openMl()"><a href='#'>Mesaj</a></li>
 	</ul>
 </div>
-<div class="row" style="height: 50px;width:1100px;">
+<div class="row" style="height: 75px;width:1100px;">
 	<div class="col-md-4">
 		<div class="well well-sm">
 			<div class="media">
@@ -414,10 +414,11 @@ label {
 					<div class="column-1">
 						<img src="profile-pic.png" class="avatar"></a>
 					</div>
-					<div class="column-1" style="padding-left: 0px;padding-top: 20px">
+					<div class="column-1" style="padding-left: 0px;padding-top: 10px">
 						<div class="media-body">
 							<h4 id="profileAdSoyad" class="media-heading"></h4>
 							<p id="rolName" class="media-heading"></p>
+							<button class="button-vue button1vue" onclick="goToLoginPage()">Çıkış</button></td>
 						</div>
 					</div>
 				</div>
@@ -433,6 +434,7 @@ label {
 				<tr>
 					<th>TCKN</th>
 					<th>Adı Soyadı</th>
+					<th>Ders</th>
 					<th>Proje Konusu</th>
 					<th>Son İşlem</th>
 					<th>Son İşlem Tarihi</th>
@@ -444,6 +446,7 @@ label {
 				<tr v-for="proje in projeList" :key="proje.id">
 					<td>{{proje.tckn}}</td>
 					<td>{{proje.adiSoyadi}}</td>
+					<td>{{proje.dersAdi}}</td>
 					<td>{{proje.projeKonusu}}</td>
 					<td>{{getSonIslem(proje.sonIslem)}}</td>
 					<td>{{proje.sonIslemTarihi}}</td>
@@ -613,6 +616,7 @@ label {
 					<tr>
 						<th>TCKN</th>
 						<th>Adı Soyadı</th>
+						<th>Ders</th>
 						<th>Proje Konusu</th>
 						<th>Kaydet</th>
 					</tr>
@@ -621,10 +625,11 @@ label {
 					<tr v-for="kullanici in kullaniciList" :key="kullanici.id">
 						<td>{{kullanici.tcNo}}</td>
 						<td>{{kullanici.adSoyad}}</td>
+						<td>{{kullanici.dersAdi}}</td>
 						<td class = "btn-vue"><input id="projeKonusuId" class="form-control form-control-lg" v-model="kullanici.proje.projeKonusu"
-													 placeholder="Proje Konusu Giriniz." style="background-color:#DAE5E5; color:black;" :disabled='isDisabledKullaniciList(kullanici.proje.projeKonusu)'>
+													 placeholder="Proje Konusu Giriniz." style="background-color:#DAE5E5; color:black;" > <!--:disabled='isDisabledKullaniciList(kullanici.proje.projeKonusu)'-->
 						</td>
-						<td><button class="button-vue button1vue" :disabled='isDisabledKullaniciList(kullanici.proje.projeKonusu)' v-on:click="saveProjeKonusu(kullanici.id, kullanici.proje.projeKonusu)">Kaydet</button></td>
+						<td><button class="button-vue button1vue"  v-on:click="saveProjeKonusu(kullanici.id, kullanici.proje.projeKonusu, kullanici.dersId)">Kaydet</button></td> <!--:disabled='isDisabledKullaniciList(kullanici.proje.projeKonusu)'-->
 					</tr>
 					</tbody>
 				</table>
@@ -686,6 +691,10 @@ label {
 		}
 	}, false);*/
 
+	function goToLoginPage() {
+		window.location.href = '../index.html';
+	}
+
 	function openPl(){
 		open("pl");
 	}
@@ -719,13 +728,13 @@ label {
 	}
 	function openl(mesaj){
 		var element1 = document.getElementById("form-input-kimden");
-		element1.value = mesaj.gonderenAdSoyad;
+		element1.value = mesaj.gonderenkullaniciid +"-"+ mesaj.gonderenAdSoyad;
 		var element2 = document.getElementById("form-input-konu");
 		element2.value = mesaj.mesajbasligi;
 		var element3 = document.getElementById("form-input-icerik");
 		element3.value = mesaj.mesajicerigi;
 		var element4 = document.getElementById("form-input-kime");
-		element4.value = mesaj.gonderilenAdSoyad;
+		element4.value = mesaj.gonderilenkullaniciid +"-"+ mesaj.gonderilenAdSoyad;
 		var element5 = document.getElementById("dosya-indir-href");
 		if(mesaj.dosyaekivarmi!="0"){
 			element5.href = mesaj.dosyaicerigi;
@@ -840,7 +849,7 @@ label {
 		},
 		mounted: function() {
 			axios
-					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListele?rolId=1&dersId='+1)
+					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListele?rolId=1&kullaniciId='+getParameterByName('kullaniciId'))
 					.then(response => {
 						this.kullaniciList = response.data.kullaniciList
 					})
@@ -849,9 +858,9 @@ label {
 					})
 		},
 		methods: {
-			saveProjeKonusu: function (kullaniciId, projeKonusu) {
+			saveProjeKonusu: function (kullaniciId, projeKonusu,dersId) {
 				axios
-						.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId+'&dersId='+1)
+						.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeAta?projeKonusu='+projeKonusu+'&kullaniciId='+kullaniciId+'&dersId='+dersId)
 						.then(response => {
 							openOnay2Modal();
 						})
@@ -877,7 +886,7 @@ label {
 		mounted: function() {
 			this.getKullaniciById();
 			axios
-					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeListele')
+					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeListele?kullaniciId='+getParameterByName('kullaniciId'))
 					.then(response => {
 						this.projeList = response.data.projeList
 					})
@@ -938,7 +947,7 @@ label {
 			}
 		},
 		mounted: function() {
-			this.getUserList();
+			//this.getUserList();
 			axios
 					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajByKullaniciId?kullaniciId='+kullaniciId+'&kim='+1) // gelenMesaj
 					.then(response => {
@@ -966,40 +975,45 @@ label {
 			onChange(event) {
 				this.userId = event.target.value;
 			},
-			mesajGonder: function() {
-				if (this.userId == null || this.userId == '') {
+			mesajGonder: async function() {
+				var kime = document.getElementById("kime-1");
+				if (kime == null || kime.value=='') {
 					alert("Mesajı kime göndereceğinizi seçiniz!");
 				} else {
-					this.userId = this.userId.split("-")[0];
-					var file = document.getElementById('dosya-1').files[0];
-					var gonderilenkullaniciid = this.userId;
-					var mesajicerigi = getmesajicerigi();
-					var mesajbasligi = getmesajbasligi();
+					this.userId = kime.value.split("-")[0];
+					const file = document.getElementById('dosya-1').files[0];
+					const gonderilenkullaniciid = this.userId;
+					const mesajicerigi = getmesajicerigi();
+					const mesajbasligi = getmesajbasligi();
 					var dosyaekivarmi = "0";
-					var yenimesajmi = "1";
-					var gonderenkullaniciid = kullaniciId;
+					const yenimesajmi = "1";
+					const gonderenkullaniciid = kullaniciId;
 					if (file != null) {
+						const fileToBase64 = async (file) =>
+								new Promise((resolve, reject) => {
+									const reader = new FileReader()
+									reader.readAsDataURL(file)
+									reader.onload = () => resolve(reader.result)
+									reader.onerror = (e) => reject(e)
+								});
+						const dosyaicerigi = await fileToBase64(file);
 						dosyaekivarmi = "1";
-						getBase64(file).then(
-								data => {
-									axios
-											.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajKayit', {
-												mesajbasligi: mesajbasligi,
-												mesajicerigi: mesajicerigi,
-												dosyaekivarmi: dosyaekivarmi,
-												dosyaicerigi: data,
-												gonderenkullaniciid: Number(gonderenkullaniciid),
-												gonderilenkullaniciid: Number(gonderilenkullaniciid),
-												yenimesajmi: yenimesajmi
-											})
-											.then(response => {
-												console.log("basarili");
-											})
-											.catch(function (error) {
-												console.log(error);
-											})
-								}
-						);
+						axios
+								.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/mesajKayit', {
+									mesajbasligi: mesajbasligi,
+									mesajicerigi: mesajicerigi,
+									dosyaekivarmi: dosyaekivarmi,
+									dosyaicerigi: dosyaicerigi,
+									gonderenkullaniciid: Number(gonderenkullaniciid),
+									gonderilenkullaniciid: Number(gonderilenkullaniciid),
+									yenimesajmi: yenimesajmi
+								})
+								.then(function () {
+									alert("basarili");
+								})
+								.catch(function (error) {
+									alert(error);
+								})
 					}
 					else{
 						axios

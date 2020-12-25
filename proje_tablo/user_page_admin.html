@@ -10,7 +10,7 @@
     <meta name="keywords" content="Colorlib Templates">
 
     <!-- Title Page-->
-    <title>Au Register Forms by Colorlib</title>
+    <title>Sistem Yönetici(Admin) Ekranı</title>
 
     <!-- Icons font CSS-->
     <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -164,6 +164,30 @@
             border-bottom-style: solid !important;
         }
 
+        .button-vue {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 6px 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .button1vue {
+            background-color: white;
+            color: #47c9af;
+            border: 2px solid #47c9af;
+        }
+
+        .button1vue:hover {
+            background-color: #47c9af;
+            color: white;
+        }
     </style>
     <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="vendor/bootstrap/js/popper.js"></script>
@@ -193,6 +217,7 @@
         <li id="n1" onclick="openPl()"><a href='#'>Kullanıcı Listesi</a></li>
         <li id="n2" onclick="openKl()"><a href='#'>Kullanıcı Ekleme</a></li>
         <li id="n3" onclick="openMl()"><a href='#'>Ders Atama</a></li>
+        <li id="n4" onclick="openSl()"><a href='#'>Ders Kullanıcı Listesi</a></li>
     </ul>
 </div>
 <div id="pl" class="page-wrapper p-t-130 p-b-100 font-poppins" style="background-color: #808B96;">
@@ -207,6 +232,7 @@
                 <th>Adı Soyadı</th>
                 <th>Kullanıcı Adı</th>
                 <th>Şifre</th>
+                <th>İşlem</th>
             </tr>
             </thead>
             <tbody>
@@ -216,7 +242,11 @@
                 <td>{{getRolName(kullanici.rolId)}}</td>
                 <td>{{kullanici.adSoyad}}</td>
                 <td>{{kullanici.kullaniciAdi}}</td>
-                <td>{{kullanici.sifre}}</td>
+                <td>{{kullanici.sifre}}<i class="fa fa-eye" aria-hidden="true" onclick="showPass()"></i></td>
+                <td>
+                    <button class="button-vue button1vue" v-on:click="kullaniciSil(kullanici.id)">Sil</button>
+                </td>
+
             </tr>
             </tbody>
         </table>
@@ -227,7 +257,7 @@
         <div class="wrapper wrapper--w680">
             <div class="card card-4">
                 <div class="card-body">
-                    <h2 class="title">Öğrenci Kayıt Formu</h2>
+                    <h2 class="title">Kullanıcı Kayıt Formu</h2>
                     <form method="POST">
                         <div class="row row-space">
                             <div class="col-2">
@@ -288,7 +318,95 @@
 
 
 <div id="ml" class="page-wrapper p-t-130 p-b-100 font-poppins" style="background-color: #808B96;">
-
+    <div class="wrapper wrapper--w680">
+        <div class="card card-4">
+            <div class="card-body">
+                <h2 class="title">Ders Kullanıcı Kayıt</h2>
+                <form method="POST">
+                    <div class="row row-space" id="ogretmenKayitPanel" >
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Ders</label>
+                                <input id="dersListId2" type="text" v-model="derslist2" list="dersList2"  @change="getKullaniciList()" placeholder="Seçiniz">
+                                <datalist id="dersList2">
+                                    <option v-for="derslist2 in dersList2">{{derslist2.id}}-{{derslist2.dersadi}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Öğretmen</label>
+                                <input id="ogretmenId" type="text" v-model="user2" list="userList2"  @change="getKullaniciList()" placeholder="Seçiniz">
+                                <datalist id="userList2">
+                                    <option v-for="user2 in userList2">{{user2.id}}-{{user2.adSoyad}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                            <div class="p-t-15" id="dersOgretmenKayit">
+                                <button class="btn btn--radius-2 btn--blue" v-on:click="saveOgretmen()">Kaydet</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-space" id="ogrenciKayitPanel">
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Ders</label>
+                                <input id="dersListId1" type="text" v-model="derslist1" list="dersList1"  @change="getKullaniciList()" placeholder="Seçiniz">
+                                <datalist id="dersList1">
+                                    <option v-for="derslist1 in dersList1">{{derslist1.id}}-{{derslist1.dersadi}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <label class="label">Öğrenci</label>
+                                <input id="ogrenciId" type="text" v-model="user1" list="userList1"  @change="getKullaniciList()" placeholder="Seçiniz">
+                                <datalist id="userList1">
+                                    <option v-for="user1 in userList1">{{user1.id}}-{{user1.adSoyad}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="input-group">
+                                <div class="p-t-15" id="dersOgrenciKayit">
+                                    <button class="btn btn--radius-2 btn--blue" v-on:click="saveOgrenci()">Kaydet</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="sl" class="page-wrapper p-t-130 p-b-100 font-poppins" style="background-color: #808B96;">
+    <div class="container">
+        <div id="dersKullaniciListele">
+            <table>
+                <thead class="thead-dark">
+                <tr>
+                    <th>Ders ID</th>
+                    <th>Ders Adı</th>
+                    <th>Kullanıcı ID</th>
+                    <th>Kullanıcı Adı Soyadı</th>
+                    <th>Kullanıcı Rol</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="dersKullanici in dersKullaniciList" :key="dersKullanici.id">
+                    <td>{{dersKullanici.dersId}}</td>
+                    <td>{{dersKullanici.dersAdi}}</td>
+                    <td>{{dersKullanici.kullaniciId}}</td>
+                    <td>{{dersKullanici.kullaniciAdSoyad}}</td>
+                    <td>{{dersKullanici.kullaniciRol}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
@@ -328,25 +446,38 @@
     function openMl(){
         open("ml");
     }
+
+    function openSl(){
+        open("sl");
+    }
     function open(param) {
         var pl = document.getElementById("pl");
         var kl = document.getElementById("kl");
         var ml = document.getElementById("ml");
+        var sl = document.getElementById("sl");
         if(param=="pl"){
             pl.style.display = "block";
             kl.style.display = "none";
             ml.style.display = "none";
+            sl.style.display = "none";
         }
         else if(param=="kl"){
             kl.style.display = "block";
             pl.style.display = "none";
             ml.style.display = "none";
+            sl.style.display = "none";
         }
-        else{
+        else if(param=="ml"){
             ml.style.display = "block";
             kl.style.display = "none";
             pl.style.display = "none";
-
+            sl.style.display = "none";
+        }
+        else{
+            sl.style.display = "block";
+            kl.style.display = "none";
+            pl.style.display = "none";
+            ml.style.display = "none";
         }
 
     }
@@ -366,27 +497,34 @@
         },
         methods: {
             save: function () {
+                if(document.getElementById("first_name").value==null || document.getElementById("last_name").value==null ||
+                    document.getElementById("tckn").value==null  || document.getElementById("kullanici_adi").value==null ||
+                    document.getElementById("passId").value==null || document.getElementById("rol").value==null){
+                    alert("Herhangi bir alan Boş olamaz!!!");
+                }
+                else{
                 var ad = document.getElementById("first_name").value;
                 var soyad = document.getElementById("last_name").value;
                 var tckn = document.getElementById("tckn").value;
                 var kullaniciAdi = document.getElementById("kullanici_adi").value;
                 var sifre = document.getElementById("passId").value;
                 var rol = document.getElementById("rol").value;
-                axios
-                    .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciKayit', {
-                        adSoyad: ad +" "+ soyad,
-                        tcNo: tckn,
-                        kullaniciAdi: kullaniciAdi,
-                        sifre: sifre,
-                        durum: "aktif",
-                        rolId: Number(rol)
-                    })
-                    .then(response => {
-                        alert("Kullanıcı Başarıyla Kydedilmiştir.");
-                    })
-                    .catch(function (error) {
-                        console.log("hata alindi");
-                    })
+                    axios
+                        .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciKayit', {
+                            adSoyad: ad + " " + soyad,
+                            tcNo: tckn,
+                            kullaniciAdi: kullaniciAdi,
+                            sifre: sifre,
+                            durum: "aktif",
+                            rolId: Number(rol)
+                        })
+                        .then(response => {
+                            alert("Kullanıcı Başarıyla Kydedilmiştir.");
+                        })
+                        .catch(function (error) {
+                            console.log("hata alindi");
+                        })
+                }
             }
         }
     })
@@ -414,8 +552,146 @@
                 else if(rolId==2)return "Öğretmen";
                 else
                     return "Admin";
+            },
+            kullaniciSil: function (kullaniciId) {
+                axios
+                    .post('http://localhost:8081/projeyonetim/kullaniciSil?kullaniciId='+kullaniciId)
+                    .then(response => {
+                        console.log("Silme İşlemi Başarılı");
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
             }
 
+        }
+    })
+
+
+    new Vue({
+        el: "#dersKullaniciListele",
+        data() {
+            return {
+                dersKullaniciList: []
+            }
+        },
+        mounted: function () {
+            axios
+                .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciDersListele')
+                .then(response => {
+                    this.dersKullaniciList = response.data.kullaniciDersList;
+                })
+                .catch(function (error) {
+                    console.log("hata alindi");
+                })
+        },
+        methods: {
+            getRolName: function (rolId) {
+                if(rolId==1)return "Öğrenci";
+                else if(rolId==2)return "Öğretmen";
+                else
+                    return "Admin";
+            }
+        }
+    })
+
+
+
+    new Vue({
+        el: "#ogrenciKayitPanel",
+        data() {
+            return {
+                user1:'',
+                userList1:[],
+                derslist1:'',
+                dersList1:[]
+            }
+        },
+        mounted: function() {
+            axios
+                .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListeleByRol?rolId=1')
+                .then(response => {
+                    this.userList1 = response.data.kullaniciList
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+            axios
+                .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/dersListele')
+                .then(response => {
+                    this.dersList1 = response.data.dersList
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        methods: {
+            saveOgrenci: function () {
+                var ders1 = document.getElementById("dersListId1").value;
+                var ogrenciId = document.getElementById("ogrenciId").value;
+                ogrenciId= ogrenciId.split("-")[0];
+                ders1= ders1.split("-")[0];
+                axios
+                    .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciDersKayit', {
+                        kullaniciId: ogrenciId,
+                        dersId: ders1
+                    })
+                    .then(response => {
+                        alert("İşlem Başarıyla Kaydedilmiştir.");
+                    })
+                    .catch(function (error) {
+                        console.log("hata alindi");
+                    })
+            }
+        }
+    })
+
+    new Vue({
+        el: "#ogretmenKayitPanel",
+        data() {
+            return {
+                user2:'',
+                userList2:[],
+                derslist2:'',
+                dersList2:[]
+            }
+        },
+        mounted: function() {
+            axios
+                .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListeleByRol?rolId=2') // gelenMesaj
+                .then(response => {
+                    this.userList2 = response.data.kullaniciList
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+            axios
+                .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/dersListele')
+                .then(response => {
+                    this.dersList2 = response.data.dersList
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        methods: {
+            saveOgretmen: function () {
+                var ders2 = document.getElementById("dersListId2").value;
+                var ogretmenId = document.getElementById("ogretmenId").value;
+                ogretmenId= ogretmenId.split("-")[0];
+                ders2= ders2.split("-")[0];
+                axios
+                    .post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciDersKayit', {
+                        kullaniciId: ogretmenId,
+                        dersId: ders2
+                    })
+                    .then(response => {
+                        alert("İşlem Başarıyla Kaydedilmiştir.");
+                    })
+                    .catch(function (error) {
+                        console.log("hata alindi");
+                    })
+            }
         }
     })
 
