@@ -250,6 +250,25 @@
     border-bottom-width: 4px !important;
     border-bottom-style: solid !important;
 }
+        .avatar {
+            vertical-align: middle;
+            width: 70px;
+            height: 70px;
+            border-radius: 70%;
+        }
+
+        .column-1 {
+            float: left;
+            width: 50%;
+            padding-top: 10px;
+            padding-left: 30px;
+            height: 100px; /* Should be removed. Only for demonstration */
+        }
+        .row-1:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
     </style>
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<script src="vendor/bootstrap/js/popper.js"></script>
@@ -268,6 +287,7 @@
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/menu_style.css">
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
 </head>
 <body>
 <div id='cssmenu'>
@@ -276,6 +296,25 @@
 		<li id="n2" onclick="openPl()"><a href='#'>Mesaj</a></li>
 	</ul>
 </div>
+    <div class="row" style="height: 50px;width:1100px;">
+        <div class="col-md-4">
+            <div class="well well-sm">
+                <div class="media">
+                    <div class="row-1">
+                    <div class="column-1">
+                    <img src="profile-pic.png" class="avatar"></a>
+                    </div>
+                    <div class="column-1" style="padding-left: 0px;padding-top: 20px">
+                    <div class="media-body">
+                        <h4 id="profileAdSoyad" class="media-heading"></h4>
+                        <p id="rolName" class="media-heading"></p>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <div>
 
 	<!--<div class="container" style="margin-left:auto; margin-right:0;">
@@ -461,6 +500,8 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     var kullaniciId = getParameterByName('kullaniciId');
+
+
 	openKl();
 	let navbar = document
 			.getElementById("cssmenu")
@@ -607,7 +648,19 @@
             reader.onerror = error => reject(error);
         });
     }
-
+    function setKullaniciField(kullanici) {
+        var profileAdSoyad = document.getElementById("profileAdSoyad");
+        profileAdSoyad.innerHTML = kullanici.adSoyad;
+        var rolAdi = document.getElementById("rolName");
+        var rolName;
+        if(kullanici.rolId=='1')
+            rolName = "Öğrenci";
+        else if(kullanici.rolId=='2')
+            rolName = "Öğretmen";
+        else if(kullanici.rolId=='2')
+            rolName = "Admin";
+        rolAdi.innerHTML = rolName;
+    }
 
 
 	new Vue({
@@ -618,6 +671,7 @@
 			}
 		},
 		mounted: function() {
+            this.getKullaniciById();
 			axios
 					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeBykullaniciId?kullaniciId='+getParameterByName('kullaniciId'))
 					.then(response => {
@@ -641,7 +695,16 @@
 						else if(islem=="2"){return "Tasarım raporu onaylandı";}
 						else if(islem=="3"){return "Gerçekleme raporu onaylandı";}
 						else{return "Sunum onaylandı";}
-					}
+					},
+                    getKullaniciById: function () {
+                        axios.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciById?kullaniciId='+kullaniciId)
+                            .then(response => {
+                                setKullaniciField(response.data.kullanici);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            })
+                    }
 				}
 	}
 	)

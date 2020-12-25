@@ -51,6 +51,8 @@
                 window.location.href = 'proje_tablo/user_page_ogrenci.html?kullaniciId=' + kullaniciId;
             } else if (rolId == 2) {
                 window.location.href = 'proje_tablo/user_page_ogretmen.html?kullaniciId=' + kullaniciId;
+            } else if (rolId == 3) {
+                window.location.href = 'proje_tablo/user_page_admin.html?kullaniciId=' + kullaniciId;
             }
         }
     }

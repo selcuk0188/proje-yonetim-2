@@ -360,6 +360,27 @@ label {
 
 }
 
+		.avatar {
+			vertical-align: middle;
+			width: 70px;
+			height: 70px;
+			border-radius: 70%;
+		}
+
+		.column-1 {
+			float: left;
+			width: 50%;
+			padding-top: 10px;
+			padding-left: 30px;
+			height: 100px; /* Should be removed. Only for demonstration */
+		}
+		.row-1:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+
     </style>
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<script src="vendor/bootstrap/js/popper.js"></script>
@@ -385,6 +406,25 @@ label {
 		<li id="n3" onclick="openMl()"><a href='#'>Mesaj</a></li>
 	</ul>
 </div>
+<div class="row" style="height: 50px;width:1100px;">
+	<div class="col-md-4">
+		<div class="well well-sm">
+			<div class="media">
+				<div class="row-1">
+					<div class="column-1">
+						<img src="profile-pic.png" class="avatar"></a>
+					</div>
+					<div class="column-1" style="padding-left: 0px;padding-top: 20px">
+						<div class="media-body">
+							<h4 id="profileAdSoyad" class="media-heading"></h4>
+							<p id="rolName" class="media-heading"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 	<div id = "pl" class="container">
 		<div id="projeListesi">
@@ -408,7 +448,7 @@ label {
 					<td>{{getSonIslem(proje.sonIslem)}}</td>
 					<td>{{proje.sonIslemTarihi}}</td>
 					<td>{{getDurum(proje.durum)}}</td>
-					<td><button class="button-vue button1vue" v-on:click="save(proje.id)">Onayla</button></td>
+					<td><button v-if="validateDurum(proje.durum)"  class="button-vue button1vue" v-on:click="save(proje.id)">Onayla</button></td>
 				</tr>
 				</tbody>
 			</table>
@@ -423,6 +463,7 @@ label {
 						<img src="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png" alt="">
 						<h1>Proje Onay</h1>
 						<p>İşlem Başarıyla Gerçekleşmiştir</p>
+						<button type="button" class="btn btn-success btn-cons" onclick="exit2Modal()">Tamam</button>
 					</div>
 				</div>
 			</div>
@@ -438,9 +479,8 @@ label {
 				<div class="row">
 					<!-- BEGIN INBOX MENU -->
 					<div class="col-md-3">
-						<h2 class="grid-title"><i class="fa fa-inbox"></i> GELEN KUTUSU</h2>
-						<a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;YENİ MESAJ</a>
-
+						<h2 class="grid-title"><i class="fa fa-inbox"></i> MESAJ KUTUSU</h2>
+						<a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;YENİ MESAJ</a>
 						<hr>
 
 						<div id = "mesajBox">
@@ -464,17 +504,14 @@ label {
 								</div>
 							</div>
 						</div>
-						<div class="padding"></div>
 						<div class="table-responsive">
 							<table class="table">
-								<thead class="thead-dark">
-								<tr>
+								<tr style="background-color: #E8EEF0">
 									<th>Konu</th>
 									<th>Gönderen</th>
 									<th>Kime</th>
 									<th>Tarih</th>
 								</tr>
-								</thead>
 								<tbody><tr v-for="mesaj in mesajList" :key="mesaj.id">
 									<td class="name"><a @click="openModal(mesaj)" href="#" >{{mesaj.mesajbasligi}}</a></td>
 									<td class="subject">{{mesaj.gonderenAdSoyad}} </a></td>
@@ -514,7 +551,7 @@ label {
 											</div>
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Temizle</button>
+											<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Çıkış</button>
 											<button type="submit" class="btn btn-primary pull-right" v-on:click="mesajGonder()"><i class="fa fa-envelope"></i> Mesaj gönder</button>
 										</div>
 									</form>
@@ -584,8 +621,10 @@ label {
 					<tr v-for="kullanici in kullaniciList" :key="kullanici.id">
 						<td>{{kullanici.tcNo}}</td>
 						<td>{{kullanici.adSoyad}}</td>
-						<td class = "btn-vue"><input id="projeKonusuId" class = "btn-vue-txt" v-model="kullanici.projeKonusu" placeholder="" ></td>
-						<td><button class="button-vue button1vue" v-on:click="saveProjeKonusu(kullanici.id, kullanici.projeKonusu)">Kaydet</button></td>
+						<td class = "btn-vue"><input id="projeKonusuId" class="form-control form-control-lg" v-model="kullanici.proje.projeKonusu"
+													 placeholder="Proje Konusu Giriniz." style="background-color:#DAE5E5; color:black;" :disabled='isDisabledKullaniciList(kullanici.proje.projeKonusu)'>
+						</td>
+						<td><button class="button-vue button1vue" :disabled='isDisabledKullaniciList(kullanici.proje.projeKonusu)' v-on:click="saveProjeKonusu(kullanici.id, kullanici.proje.projeKonusu)">Kaydet</button></td>
 					</tr>
 					</tbody>
 				</table>
@@ -640,6 +679,12 @@ label {
 			this.className += " active";
 		});
 	}
+
+	/*document.addEventListener('click', function (e) {
+		if(e.target.className !== 'modal'){
+			exitAllModal();
+		}
+	}, false);*/
 
 	function openPl(){
 		open("pl");
@@ -703,7 +748,14 @@ label {
 		var modal = document.getElementById("mesaj-modal");
 		modal.style.display = "none";
 	}
-
+	function exitAllModal() {
+		var modal = document.getElementById("mesaj-modal");
+		modal.style.display = "none";
+		modal = document.getElementById("proje-onay-modal");
+		modal.style.display = "none";
+		modal = document.getElementById("proje-onay-modal-2");
+		modal.style.display = "none";
+	}
 	function exitModal(){
 		var modal = document.getElementById("mesaj-modal");
 		modal.style.display = "none";
@@ -761,11 +813,25 @@ label {
 		});
 	}
 
+	function setKullaniciField(kullanici) {
+		var profileAdSoyad = document.getElementById("profileAdSoyad");
+		profileAdSoyad.innerHTML = kullanici.adSoyad;
+		var rolAdi = document.getElementById("rolName");
+		var rolName;
+		if(kullanici.rolId=='1')
+			rolName = "Öğrenci";
+		else if(kullanici.rolId=='2')
+			rolName = "Öğretmen";
+		else if(kullanici.rolId=='2')
+			rolName = "Admin";
+		rolAdi.innerHTML = rolName;
+	}
 
 	new Vue({
 		el: "#kullaniciListele",
 		data: {
-			isBasariliMi : false
+			isBasariliMi : false,
+			dersId : 1
 		},
 		data() {
 			return {
@@ -774,7 +840,7 @@ label {
 		},
 		mounted: function() {
 			axios
-					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListele?rolId=1')
+					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciListele?rolId=1&dersId='+1)
 					.then(response => {
 						this.kullaniciList = response.data.kullaniciList
 					})
@@ -792,6 +858,11 @@ label {
 						.catch(function (error) {
 							console.log(error);
 						})
+			},
+			isDisabledKullaniciList: function (isDis) {
+				if(isDis!=null && isDis != '')
+					return true;
+				return false;
 			}
 		}
 	})
@@ -804,6 +875,7 @@ label {
 			}
 		},
 		mounted: function() {
+			this.getKullaniciById();
 			axios
 					.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/projeListele')
 					.then(response => {
@@ -831,12 +903,24 @@ label {
 				else if(durum==3){return "Sunum onayı bekleniyor";}
 				else{return "Proje tamamlandı";}
 			},
+			validateDurum: function (durum) {
+				return durum < 4;
+			},
 			getSonIslem: function (islem) {
 				if(islem=="0"){return "Proje ataması yapıldı";}
 				else if(islem=="1"){return "Analiz raporu onaylandı";}
 				else if(islem=="2"){return "Tasarım raporu onaylandı";}
 				else if(islem=="3"){return "Gerçekleme raporu onaylandı";}
 				else{return "Sunum onaylandı";}
+			},
+			getKullaniciById: function () {
+				axios.post('http://ec2-35-156-64-230.eu-central-1.compute.amazonaws.com:8081/projeyonetim/kullaniciById?kullaniciId='+kullaniciId)
+						.then(response => {
+							setKullaniciField(response.data.kullanici);
+						})
+						.catch(function (error) {
+							console.log(error);
+						})
 			}
 		}
 	})
